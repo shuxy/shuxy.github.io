@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/nms/" />
+  <link rel="next" href="http://example.org/2018/yolo/" />
+  <link rel="canonical" href="http://example.org/2018/rcnn/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           RCNN | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="RCNN | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "RCNN",
+    "headline" : "RCNN",
+    "description" : "RCNN\n 利用selective-search方法提取2000个自下而上的region proposal； 针对每一个region proposal我们用一个大的CNN网络计算特征； 利用线性SVM分类器对每个region proposal进行分类； 进行回归分析调整region proposal区域。  Fast-RCNN\n 读取整个图片和一个ROI （Regions of Interest，也就是一系列划分的bounding box）集合作为输入)； 然后convnet从整个图片中提取特征，得到feature map； 对每一个ROI区域，pooling层从feature map中提取一个固定大小的feature factor； feature factor被送往FC（fully-connected layer），被映射到两个部分，一部分是评估k个目标类加上catch-all\x26quot;背景\x26quot;类的softmax probability；另一部分产生bbox regressor，即针对k个目标对象的每一个4值真值数量（4 real-valued numbers），每个4值编码集合（set of 4 values）K类目标对象之一的bounding-box位置。  Faster-RCNN\n 针对整张图片，利用CNN获取feature map； 利用RPN网络针对feature map进行全连接运算，将其输出为256d或者512d的低维特征向量。⚠️RPN介绍：Region Proposal Network，利用卷积后的特征图生成region proposal，通过增加两个卷积层实现，RPN网络输出的是坐标和score两类。 最后将该低维向量送入两个全连接层，即box回归层和box分类层。  RCNN系列是将目标检测分为两部分实现的：\n 物体的类别；分类问题。 物体的区域，即bounding box，回归问题。  ",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-07-26 00:00:20 \x2b0800 CST",
+    "dateModified" : "2018-07-26 00:00:20 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/rcnn\/",
+    "wordCount" : "43",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">RCNN</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-07-26 itemprop="datePublished">July 26, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>RCNN</p>
+<ol>
+<li>利用selective-search方法提取2000个自下而上的region proposal；</li>
+<li>针对每一个region proposal我们用一个大的CNN网络计算特征；</li>
+<li>利用线性SVM分类器对每个region proposal进行分类；</li>
+<li>进行回归分析调整region proposal区域。</li>
+</ol>
+<p><img src="/media/rcnn/1.png" alt=""><br></p>
+<p>Fast-RCNN</p>
+<ol>
+<li>读取整个图片和一个ROI</li>
+<li>（Regions of Interest，也就是一系列划分的bounding box）集合作为输入)；</li>
+<li>然后convnet从整个图片中提取特征，得到feature map；</li>
+<li>对每一个ROI区域，pooling层从feature map中提取一个固定大小的feature factor；</li>
+<li>feature factor被送往FC（fully-connected layer），被映射到两个部分，一部分是评估k个目标类加上catch-all&quot;背景&quot;类的softmax probability；另一部分产生bbox regressor，即针对k个目标对象的每一个4值真值数量（4 real-valued numbers），每个4值编码集合（set of 4 values）K类目标对象之一的bounding-box位置。</li>
+</ol>
+<p><img src="/media/rcnn/2.png" alt=""><br></p>
+<p>Faster-RCNN</p>
+<ol>
+<li>针对整张图片，利用CNN获取feature map；</li>
+<li>利用RPN网络针对feature map进行全连接运算，将其输出为256d或者512d的低维特征向量。⚠️RPN介绍：Region Proposal Network，利用卷积后的特征图生成region proposal，通过增加两个卷积层实现，RPN网络输出的是坐标和score两类。</li>
+<li>最后将该低维向量送入两个全连接层，即box回归层和box分类层。</li>
+</ol>
+<p><img src="/media/rcnn/3.png" alt=""><br></p>
+<p>RCNN系列是将目标检测分为两部分实现的：</p>
+<ol>
+<li>物体的类别；分类问题。</li>
+<li>物体的区域，即bounding box，回归问题。</li>
+</ol>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/nms/" class="prev" rel="prev" title="Non Maximum Suppression"><i class="iconfont icon-left"></i>&nbsp;Non Maximum Suppression</a>
+         
+        
+        <a href="http://example.org/2018/yolo/" class="next" rel="next" title="YOLO">YOLO&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

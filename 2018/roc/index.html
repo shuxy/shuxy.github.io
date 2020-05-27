@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/heatmap/" />
+  <link rel="next" href="http://example.org/2018/stack_model/" />
+  <link rel="canonical" href="http://example.org/2018/roc/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           ROC &amp; AUC | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="ROC &amp; AUC | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "ROC \x26 AUC",
+    "headline" : "ROC \x26 AUC",
+    "description" : "预备知识：\n TP（True Positive）：指正确分类的正样本数，即预测为正样本，实际也是正样本。 FP（False Positive）：指被错误的标记为正样本的负样本数，即实际为负样本而被预测为正样本，所以是False。 TN（True Negative）：指正确分类的负样本数，即预测为负样本，实际也是负样本。 FN（False Negative）：指被错误的标记为负样本的正样本数，即实际为正样本而被预测为负样本，所以是False。 TP\x2bFP\x2bTN\x2bFN：样本总数。 TP\x2bFN：实际正样本数。 TP\x2bFP：预测结果为正样本的总数，包括预测正确的和错误的。 FP\x2bTN：实际负样本数。 TN\x2bFN：预测结果为负样本的总数，包括预测正确的和错误的。  TPR指实际正样本中被预测正确的概率。 真正例率 (TPR) 是召回率的同义词，因此定义如下： $$ \\begin{equation} \\begin{split} \\ TPR \x26amp;= \\frac{TP}{TP\x2bFN} \\\n\\end{split} \\tag{1} \\end{equation} $$ FPR指实际负样本中被错误预测为正样本的概率。 假正例率 (FPR) 的定义如下： $$ \\begin{equation} \\begin{split} \\ FPR \x26amp;= \\frac{FP}{FP\x2bTN} \\\n\\end{split} \\tag{2} \\end{equation} $$ ROC（Receiver Operating Characteristic），平面的横坐标是false positive rate(FPR)假阳率，纵坐标是true positive rate(TPR)真阳率。 ROC计算过程如下：\n 首先每个样本都需要有一个label值，并且还需要一个预测的score值（取值0到1）; 然后按这个score对样本由大到小进行排序，假设这些数据位于表格中的一列，从上到下依次降序; 现在从上到下按照样本点的取值进行划分，位于分界点上面的我们把它归为预测为正样本，位于分界点下面的归为负样本; 分别计算出此时的TPR（Recall）=TP\/P和FPR（1-SP）=FP\/N，然后在图中绘制（FPR, TPR）点。 从上往下逐个样本计算，最后会得到一条光滑的曲线    AUC（Area Under Curve）是机器学习常用的二分类评测手段，直接含义是ROC曲线下的面积。另一种解释是：随机抽出一对样本（一个正样本，一个负样本），然后用训练得到的分类器来对这两个样本进行预测，预测得到正样本概率大于负样本概率的概率。所以AUC反应的是分类器对样本的排序能力。\n计算步骤：",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-04-14 18:07:19 \x2b0800 CST",
+    "dateModified" : "2018-04-14 18:07:19 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/roc\/",
+    "wordCount" : "211",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">ROC &amp; AUC</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-04-14 itemprop="datePublished">April 14, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>预备知识：</p>
+<ul>
+<li>TP（True Positive）：指正确分类的正样本数，即预测为正样本，实际也是正样本。</li>
+<li>FP（False Positive）：指被错误的标记为正样本的负样本数，即实际为负样本而被预测为正样本，所以是False。</li>
+<li>TN（True Negative）：指正确分类的负样本数，即预测为负样本，实际也是负样本。</li>
+<li>FN（False Negative）：指被错误的标记为负样本的正样本数，即实际为正样本而被预测为负样本，所以是False。</li>
+<li>TP+FP+TN+FN：样本总数。</li>
+<li>TP+FN：实际正样本数。</li>
+<li>TP+FP：预测结果为正样本的总数，包括预测正确的和错误的。</li>
+<li>FP+TN：实际负样本数。</li>
+<li>TN+FN：预测结果为负样本的总数，包括预测正确的和错误的。</li>
+</ul>
+<p>TPR指实际正样本中被预测正确的概率。
+真正例率 (TPR) 是召回率的同义词，因此定义如下：
+$$
+\begin{equation}
+\begin{split}
+\ TPR &amp;= \frac{TP}{TP+FN} \<br>
+\end{split} \tag{1}
+\end{equation}
+$$
+FPR指实际负样本中被错误预测为正样本的概率。
+假正例率 (FPR) 的定义如下：
+$$
+\begin{equation}
+\begin{split}
+\ FPR &amp;= \frac{FP}{FP+TN} \<br>
+\end{split} \tag{2}
+\end{equation}
+$$
+ROC（Receiver Operating Characteristic），平面的横坐标是false positive rate(FPR)假阳率，纵坐标是true positive rate(TPR)真阳率。
+<img src="/media/rocauc/1.png" alt="">
+ROC计算过程如下：</p>
+<ul>
+<li>首先每个样本都需要有一个label值，并且还需要一个预测的score值（取值0到1）;</li>
+<li>然后按这个score对样本由大到小进行排序，假设这些数据位于表格中的一列，从上到下依次降序;</li>
+<li>现在从上到下按照样本点的取值进行划分，位于分界点上面的我们把它归为预测为正样本，位于分界点下面的归为负样本;</li>
+<li>分别计算出此时的TPR（Recall）=TP/P和FPR（1-SP）=FP/N，然后在图中绘制（FPR, TPR）点。</li>
+<li>从上往下逐个样本计算，最后会得到一条光滑的曲线
+<img src="/media/rocauc/2.png" alt=""></li>
+</ul>
+<hr>
+<p>AUC（Area Under Curve）是机器学习常用的二分类评测手段，直接含义是ROC曲线下的面积。另一种解释是：随机抽出一对样本（一个正样本，一个负样本），然后用训练得到的分类器来对这两个样本进行预测，预测得到正样本概率大于负样本概率的概率。所以AUC反应的是分类器对样本的排序能力。</p>
+<p>计算步骤：</p>
+<ul>
+<li>
+<p>对一批已知正负的样本集合进行分类，按概率从高到矮排个降序， 对于正样本中概率最高的，排序为rank_1， 比它概率小的有M-1个正样本（M为正样本个数），(rank_1 - M) 个负样本。</p>
+</li>
+<li>
+<p>正样本概率第二高的， 排序为rank_2， 比它概率小的有M-2个正样本，(rank_2 - M + 1)个负样本。</p>
+</li>
+<li>
+<p>以此类推，正样本中概率最小的， 排序为rank_M，比它概率小的有0个正样本，rank_M - 1 个负样本。总共有MxN个正负样本对（N为负样本个数）。把所有比较中正样本概率大于负样本概率的例子都算上，就是正样本概率大于负样本概率的可能性。
+$$
+\begin{equation}
+\begin{split}
+\ AUC &amp;= \frac{rank_1 - M + rank_2 - M + 1 &hellip;. + rank_M - 1}{MN} \<br>
+\end{split} \tag{3}
+\end{equation}
+$$</p>
+</li>
+</ul>
+<p>Python-Numpy实现AUC计算</p>
+<pre><code>import numpy as np 
+import matplotlib.pyplot as plt
+
+def AUC(labels, preds, n_bins=100): 
+    m = sum(labels)  #positive
+    n = len(labels) - m #negative
+    total_case = m * n #公式分母
+
+    pos = [0 for _ in range(n_bins)] 
+    neg = [0 for _ in range(n_bins)] #这里默认用100个离散点做图
+
+    bin_width = 1.0 / n_bins
+    for i in range(len(labels)): 
+        nth_bin = int(preds[i]/bin_width) #这和直接乘n_bins没有区别吧？
+        if labels[i]==1: 
+            pos[nth_bin] += 1 
+        else: 
+            neg[nth_bin] += 1 
+
+    accumulated_neg = 0 
+    satisfied_pair = 0 
+
+    for i in range(n_bins): #这里的下标不仅用来取值，而且代表从小到大的取值顺序
+        #求pos[i]不为0所对应的rank
+        satisfied_pair += (pos[i]*accumulated_neg + pos[i]*neg[i]*0.5)
+        accumulated_neg += neg[i] #[0,4,0] / [2,1,1] —&gt; + + / - - - - + / +
+
+    return satisfied_pair / total_case
+</code></pre>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/heatmap/" class="prev" rel="prev" title="Heatmap"><i class="iconfont icon-left"></i>&nbsp;Heatmap</a>
+         
+        
+        <a href="http://example.org/2018/stack_model/" class="next" rel="next" title="Stacking Model">Stacking Model&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

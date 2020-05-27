@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2019/session/" />
+  <link rel="next" href="http://example.org/2019/goroutine/" />
+  <link rel="canonical" href="http://example.org/2019/sessionsync/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Golang SessionSynchronization | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Golang SessionSynchronization | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Golang SessionSynchronization",
+    "headline" : "Golang SessionSynchronization",
+    "description" : "多机部署时Session同步问题解决方案\nBaseController.go\n添加全局变量\nimport ( \x26quot;github.com\/astaxie\/beego\/session\x26quot; _ \x26quot;github.com\/astaxie\/beego\/session\/redis\x26quot; ) var globalSessions *session.Manager func init() { \/\/ sessionproviderconfig是app.conf中redis的配置信息 sessionCfg := beego.AppConfig.String(\x26quot;sessionproviderconfig\x26quot;) if len(sessionCfg) == 0 { return } sessionConfig := \x26amp;session.ManagerConfig{ CookieName: \x26quot;gosessionid\x26quot;, EnableSetCookie: true, Gclifetime: 3600, Maxlifetime: 3600, Secure: false, CookieLifeTime: 3600, ProviderConfig: sessionCfg, } \/\/ 创建globalsession，使用redis作为存储类型\tglobalSessions, _ = session.NewManager(\x26quot;redis\x26quot;, sessionConfig) go globalSessions.GC() } \n从session中获取用户信息\nfunc (c *BaseController) Prepare() { \/\/ 初始化失败，直接Abort if nil == globalSessions { c.Abort(\x26quot;500\x26quot;) } session, _ := globalSessions.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-07-16 11:28:51 \x2b0800 CST",
+    "dateModified" : "2019-07-16 11:28:51 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2019\/sessionsync\/",
+    "wordCount" : "139",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Golang SessionSynchronization</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2019-07-16 itemprop="datePublished">July 16, 2019</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>多机部署时Session同步问题解决方案</strong></p>
+<p><em><strong>BaseController.go</strong></em><br>
+添加全局变量</p>
+<pre><code>import (
+	&quot;github.com/astaxie/beego/session&quot;
+	_ &quot;github.com/astaxie/beego/session/redis&quot;
+)
+
+var globalSessions *session.Manager
+
+func init() {
+	// sessionproviderconfig是app.conf中redis的配置信息
+	sessionCfg := beego.AppConfig.String(&quot;sessionproviderconfig&quot;)
+	if len(sessionCfg) == 0 {
+		return
+	}
+	sessionConfig := &amp;session.ManagerConfig{
+		CookieName:      &quot;gosessionid&quot;,
+		EnableSetCookie: true,
+		Gclifetime:      3600,
+		Maxlifetime:     3600,
+		Secure:          false,
+		CookieLifeTime:  3600,
+		ProviderConfig:  sessionCfg,
+	}
+	// 创建globalsession，使用redis作为存储类型	
+	globalSessions, _ = session.NewManager(&quot;redis&quot;, sessionConfig)
+	go globalSessions.GC()
+}
+</code></pre><br>
+<p><strong>从session中获取用户信息</strong></p>
+<pre><code>func (c *BaseController) Prepare() {
+	// 初始化失败，直接Abort
+	if nil == globalSessions {
+		c.Abort(&quot;500&quot;)
+	}
+	session, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	defer session.SessionRelease(c.Ctx.ResponseWriter)
+	memberInSession := false
+	var member models.Member
+	memberobj := session.Get(common.SessionName)
+	if nil != memberobj {
+		member = memberobj.(models.Member)
+		if member.MemberId &gt; 0 {
+			c.Member = &amp;member
+		} else {
+			// login
+		}
+	}
+}
+</code></pre><br>
+<p><strong>设置session</strong></p>
+<pre><code>// 设置登录用户信息
+func (c *BaseController) SetMember(member models.Member) {
+	session, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	defer session.SessionRelease(c.Ctx.ResponseWriter)
+	if member.MemberId &lt;= 0 {
+		session.Delete(common.SessionName)
+	} else {
+		session.Set(common.SessionName, member)
+	}
+}
+</code></pre>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2019/session/" class="prev" rel="prev" title="Golang Session"><i class="iconfont icon-left"></i>&nbsp;Golang Session</a>
+         
+        
+        <a href="http://example.org/2019/goroutine/" class="next" rel="next" title="Golang Goroutine">Golang Goroutine&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

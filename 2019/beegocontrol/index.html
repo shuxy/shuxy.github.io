@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2019/beegomodel/" />
+  <link rel="next" href="http://example.org/2019/beegoview/" />
+  <link rel="canonical" href="http://example.org/2019/beegocontrol/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Golang Controller | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Golang Controller | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Golang Controller",
+    "headline" : "Golang Controller",
+    "description" : "Controller指Web开发人员编写，处理不同URL的控制器。Controller在整个的MVC框架中起到了一个核心的作用，负责处理业务逻辑，因此控制器是整个框架中必不可少的一部分。\nBeego的REST设计\ntype ControllerInterface interface { Init(ct *Context, cn string) \/\/初始化上下文和子类名称 Prepare() \/\/开始执行之前的一些处理 Get() \/\/method=GET的处理 Post() \/\/method=POST的处理 Delete() \/\/method=DELETE的处理 Put() \/\/method=PUT的处理 Head() \/\/method=HEAD的处理 Patch() \/\/method=PATCH的处理 Options() \/\/method=OPTIONS的处理 Finish() \/\/执行完成之后的处理 Render() error \/\/执行完method对应的方法之后渲染页面 } models\/MainController.go\npackage controllers import ( \x26quot;github.com\/astaxie\/beego\x26quot; ) type MainController struct { beego.Controller } func (this *MainController) Get() { this.Data[\x26quot;Username\x26quot;] = \x26quot;astaxie\x26quot; this.Data[\x26quot;Email\x26quot;] = \x26quot;astaxie@gmail.com\x26quot; this.TplNames = \x26quot;index.tpl\x26quot; } views\/index.tpl\n\x26lt;!DOCTYPE html\x26gt; \x26lt;html\x26gt; \x26lt;head\x26gt; \x26lt;title\x26gt;beego welcome template\x26lt;\/title\x26gt; \x26lt;\/head\x26gt; \x26lt;body\x26gt; \x26lt;h1\x26gt;Hello, world!",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-05-19 11:28:29 \x2b0800 CST",
+    "dateModified" : "2019-05-19 11:28:29 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2019\/beegocontrol\/",
+    "wordCount" : "75",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Golang Controller</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2019-05-19 itemprop="datePublished">May 19, 2019</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>Controller指Web开发人员编写，处理不同URL的控制器。Controller在整个的MVC框架中起到了一个核心的作用，负责处理业务逻辑，因此控制器是整个框架中必不可少的一部分。</strong></p>
+<p><strong>Beego的REST设计</strong></p>
+<pre><code>type ControllerInterface interface {
+    Init(ct *Context, cn string)    //初始化上下文和子类名称
+    Prepare()                       //开始执行之前的一些处理
+    Get()                           //method=GET的处理
+    Post()                          //method=POST的处理
+    Delete()                        //method=DELETE的处理
+    Put()                           //method=PUT的处理
+    Head()                          //method=HEAD的处理
+    Patch()                         //method=PATCH的处理
+    Options()                       //method=OPTIONS的处理
+    Finish()                        //执行完成之后的处理       
+    Render() error                  //执行完method对应的方法之后渲染页面
+}
+</code></pre><p><strong>models/MainController.go</strong></p>
+<pre><code>package controllers
+
+import (
+    &quot;github.com/astaxie/beego&quot;
+)
+
+type MainController struct {
+    beego.Controller
+}
+
+func (this *MainController) Get() {
+    this.Data[&quot;Username&quot;] = &quot;astaxie&quot;
+    this.Data[&quot;Email&quot;] = &quot;astaxie@gmail.com&quot;
+    this.TplNames = &quot;index.tpl&quot;
+}
+</code></pre><p><strong>views/index.tpl</strong></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;beego welcome template&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello, world!{{.Username}},{{.Email}}&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2019/beegomodel/" class="prev" rel="prev" title="Golang Model"><i class="iconfont icon-left"></i>&nbsp;Golang Model</a>
+         
+        
+        <a href="http://example.org/2019/beegoview/" class="next" rel="next" title="Golang View">Golang View&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

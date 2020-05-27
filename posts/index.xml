@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Shuxy&#39;s Blog</title>
+    <link>http://example.org/posts/</link>
+    <description>Recent content in Posts on Shuxy&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 05 May 2020 10:22:42 +0800</lastBuildDate>
+    
+	<atom:link href="http://example.org/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Blur Detection</title>
+      <link>http://example.org/2020/blur/</link>
+      <pubDate>Tue, 05 May 2020 10:22:42 +0800</pubDate>
+      
+      <guid>http://example.org/2020/blur/</guid>
+      <description>拉普拉斯算子突出显示了包含快速强度变化的图像区域，通常用于边缘检测。
+如果图像包含高方差，则代表图像正常对焦（边缘型和非边缘型）的分布范围将很大。但是，如果 方差非常低，则对焦范围小，表明图像中的边缘很少。众所周知，图像越模糊，边缘越少。
+拉普拉斯内核： 用拉普拉斯算子做图片模糊检测的技巧是设置正确的阈值，该阈值可能完全取决于域。阈值太低，如果图像不清晰则将其错误地标记为模糊。如果阈值太高，则实际上模糊的图像将不会被标记为模糊。
+整体流程概括：
+  读取图片数据
+  对其进行灰度转换（三通道 -&amp;gt; 一通道）
+  使用拉普拉斯内核卷积图片（图片数据 * 卷积核 &amp;ndash;&amp;gt; 对应位置的乘法）
+  计算图片方差（具体计算方式是先将卷积后的图片拉伸成一维，然后求其均值，利用广播机制求解每个位置的value和mean之间的差值，最后用dot对差值矩阵和差值矩阵转置进行点积）
+  from imutils import paths import cv2 def variance_of_laplacian(image): return cv2.Laplacian(image, cv2.CV_64F).var() for imagePath in paths.list_images(&#39;/Users/shuxy/Desktop/pic/&#39;): # 读取图片 image = cv2.imread(imagePath) # 将图片转换为灰度图片 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) # 计算灰度图片的方差 fm = variance_of_laplacian(gray) text = &amp;quot;Not Blurry&amp;quot; # 设置输出的文字 if fm &amp;lt; 100.: text = &amp;quot;Blurry&amp;quot; # 显示结果 cv2.</description>
+    </item>
+    
+    <item>
+      <title>Golang Captcha</title>
+      <link>http://example.org/2020/captcha/</link>
+      <pubDate>Mon, 20 Apr 2020 11:43:38 +0800</pubDate>
+      
+      <guid>http://example.org/2020/captcha/</guid>
+      <description>Beego框架默认有captcha这个验证码插件。在utils/captcha下面：
+Captcha结构体
+type Captcha struct { // beego cache store store cache.Cache // url prefix for captcha image URLPrefix string // specify captcha id input field name FieldIdName string // specify captcha result input field name FieldCaptchaName string // captcha image width and height StdWidth int StdHeight int // captcha chars nums ChallengeNums int // captcha expiration seconds Expiration int64 // cache key prefix CachePrefix string } 使用方法
+import( &amp;quot;github.com/astaxie/beego/cache&amp;quot; &amp;quot;github.</description>
+    </item>
+    
+    <item>
+      <title>Golang Sort</title>
+      <link>http://example.org/2020/sort/</link>
+      <pubDate>Wed, 18 Mar 2020 11:48:24 +0800</pubDate>
+      
+      <guid>http://example.org/2020/sort/</guid>
+      <description>快速排序
+通过一趟排序将待排记录分隔成独立的两部分，其中一部分记录的关键字均比另一部分的关键字小，则可分别对这两部分记录继续进行排序，以达到整个序列有序。
+ 如果不多于1个数据，直接返回。 一般选择序列最左边的值作为支点数据。 将序列分成2部分，一部分都大于支点数据，另外一部分都小于支点数据。 对两边利用递归排序数列。  func quickSort(s []int, left, right int) { if left &amp;gt;= right { return } // 调整基准的索引 i := quickAdjust(s, left, right) // 调整左边的序列 quickSort(s, left, i-1) // 调整右边的序列 quickSort(s, i+1, right) } // 返回调整后基准数的位置，基准数取s[left] func quickAdjust(s []int, left, right int) int { i, j := left, right for i &amp;lt; j { // 从右向左找小于基准的数 for i &amp;lt; j &amp;amp;&amp;amp; s[j] &amp;gt;= s[left] { j-- } // 从左向右找大于基准的数 for i &amp;lt; j &amp;amp;&amp;amp; s[i] &amp;lt;= s[left] { i++ } // 交换 if i &amp;lt; j { s[i], s[j] = s[j], s[i] } } // 调整基准的位置 s[left], s[i] = s[i], s[left] return i } 归并排序</description>
+    </item>
+    
+    <item>
+      <title>Golang Channel</title>
+      <link>http://example.org/2019/channel/</link>
+      <pubDate>Wed, 23 Oct 2019 11:46:41 +0800</pubDate>
+      
+      <guid>http://example.org/2019/channel/</guid>
+      <description>不要通过共享内存的方式进行通信，而是应该通过通信的方式共享内存
+Go 语言提供了一种不同的并发模型，也就是通信顺序进程（Communicating sequential processes，CSP） Goroutine 和 Channel 分别对应 CSP 中的实体和传递信息的媒介，Goroutine 会通过 Channel 传递数据。
+channel 收发操作均遵循了先入先出（FIFO）的设计，具体规则如下：
+ 先从 Channel 读取数据的 Goroutine 会先接收到数据； 先向 Channel 发送数据的 Goroutine 会得到先发送数据的权利；  channel的结构体
+type hchan struct { qcount uint // Channel 中的元素个数 dataqsiz uint // Channel 中的循环队列的长度 buf unsafe.Pointer // Channel 的缓冲区数据指针 elemsize uint16 // Channel能够收发的元素类型 closed uint32 elemtype *_type // Channel能够收发的元素大小 sendx uint // Channel 的发送操作处理到的位置 recvx uint // Channel 的接收操作处理到的位置 recvq waitq // 双向链表，存储由于缓冲区空间不足而阻塞的goroutine列表 sendq waitq // 双向链表，存储由于缓冲区空间不足而阻塞的goroutine列表 lock mutex } 发送数据</description>
+    </item>
+    
+    <item>
+      <title>Golang Goroutine</title>
+      <link>http://example.org/2019/goroutine/</link>
+      <pubDate>Thu, 15 Aug 2019 11:46:48 +0800</pubDate>
+      
+      <guid>http://example.org/2019/goroutine/</guid>
+      <description>groutine能拥有强大的并发实现是通过GPM调度模型实现
+Go 语言的调度器通过使用与 CPU 数量相等的线程减少线程频繁切换的内存开销，同时在每一个线程上执行额外开销更低的 Goroutine 来降低操作系统和硬件的负载。
+Go 语言中的线程 M、处理器 P 和 Goroutine 的关系： G
+Gorotuine，Go 语言调度器中待执行的任务，它运行时在调度器中的地位与线程在操作系统中差不多，但是它占用了更小的内存空间，也降低了上下文切换的开销。是 Go 语言在用户态提供的线程，作为一种粒度更细的资源调度单元，如果使用得当能够在高并发的场景下更高效地利用机器的CPU。
+Goroutine常见状态:
+ waiting：Goroutine 正在等待某些条件满足 runnable：Goroutine 已经准备就绪，可以在线程运行 running：Goroutine 正在某个线程上运行  Goroutine的状态迁移
+M
+操作系统线程。调度器最多可以创建 10000 个线程，但是其中大多数的线程都不会执行用户代码（可能陷入系统调用），最多只会有 GOMAXPROCS 个活跃线程能够正常运行。 P
+处理器P是线程和Goroutine 的中间层，它能提供线程需要的上下文环境，也会负责调度线程上的等待队列，通过处理器 P 的调度，每一个内核线程都能够执行多个 Goroutine，它能在 Goroutine 进行一些 I/O 操作时及时切换，提高线程的利用率。P的数量可以通过GOMAXPROCS( )来设置，它其实也就代表了真正的并发度，即有多少个goroutine可以同时运行。 每一个物理线程M都拥有一个处理器P，每一个P也都有一个正在运行的goroutine。P维护着正在等待被调度的runnable就绪态的goroutine队列。 当一个OS线程陷入阻塞，P会转而在其他线程中运行。阻塞结束后的线程会尝试获取P运行goroutine，如果没法获取，则把goroutine放在global runqueue中。所有的P也会周期性的检查global runqueue并运行其中的goroutine，否则global runqueue上的goroutine永远无法执行。
+若P所分配的任务G很快就执行完成，则会从其他P中拿取一些G来执行，一般会直接拿runqueue中的一半，确保了每个OS线程都能充分的使用。</description>
+    </item>
+    
+    <item>
+      <title>Golang SessionSynchronization</title>
+      <link>http://example.org/2019/sessionsync/</link>
+      <pubDate>Tue, 16 Jul 2019 11:28:51 +0800</pubDate>
+      
+      <guid>http://example.org/2019/sessionsync/</guid>
+      <description>多机部署时Session同步问题解决方案
+BaseController.go
+添加全局变量
+import ( &amp;quot;github.com/astaxie/beego/session&amp;quot; _ &amp;quot;github.com/astaxie/beego/session/redis&amp;quot; ) var globalSessions *session.Manager func init() { // sessionproviderconfig是app.conf中redis的配置信息 sessionCfg := beego.AppConfig.String(&amp;quot;sessionproviderconfig&amp;quot;) if len(sessionCfg) == 0 { return } sessionConfig := &amp;amp;session.ManagerConfig{ CookieName: &amp;quot;gosessionid&amp;quot;, EnableSetCookie: true, Gclifetime: 3600, Maxlifetime: 3600, Secure: false, CookieLifeTime: 3600, ProviderConfig: sessionCfg, } // 创建globalsession，使用redis作为存储类型	globalSessions, _ = session.NewManager(&amp;quot;redis&amp;quot;, sessionConfig) go globalSessions.GC() } 
+从session中获取用户信息
+func (c *BaseController) Prepare() { // 初始化失败，直接Abort if nil == globalSessions { c.Abort(&amp;quot;500&amp;quot;) } session, _ := globalSessions.</description>
+    </item>
+    
+    <item>
+      <title>Golang Session</title>
+      <link>http://example.org/2019/session/</link>
+      <pubDate>Fri, 12 Jul 2019 11:28:47 +0800</pubDate>
+      
+      <guid>http://example.org/2019/session/</guid>
+      <description>session是在服务器端实现的一种用户和服务器之间认证的解决方案，beego 内置了 session 模块，目前 session 模块支持的后端引擎包括 memory、cookie、file、mysql、redis、couchbase、memcache、postgres，用户也可以根据相应的 interface 实现自己的引擎。
+配置文件
+// app.conf 文件中配置 sessionon = true 初始化
+var globalSessions *session.Manager func InitSession(){ sessionConfig := &amp;amp;session.ManagerConfig{ CookieName:&amp;quot;gosessionid&amp;quot;, // 客户端存储 cookie 的名字 EnableSetCookie: true, // 是否开启SetCookie设置 Gclifetime:3600, // 触发 GC 的时间 Maxlifetime: 3600, // 服务器端存储的数据的过期时间 Secure: false, // 是否开启 HTTPS CookieLifeTime: 3600, // 客户端存储的 cookie 的时间 ProviderConfig: &amp;quot;./tmp&amp;quot;, // 配置信息 } globalSessions,_ = session.NewManager(&amp;quot;memory&amp;quot;,sessionConfig) go globalSessions.GC() Session方法
+ SetSession(name string, value interface{}) GetSession(name string) interface{} DelSession(name string) SessionRegenerateID() DestroySession()  //登录验证完写入一个session func (this *LoginController) Login() { log.</description>
+    </item>
+    
+    <item>
+      <title>Golang Redis</title>
+      <link>http://example.org/2019/redis/</link>
+      <pubDate>Mon, 03 Jun 2019 11:28:36 +0800</pubDate>
+      
+      <guid>http://example.org/2019/redis/</guid>
+      <description>redis本质是一个key-value类型的内存数据库，整个数据库统统加载在内存中进行操作，定期通过异步操作把数据库数据flush到硬盘上保存。因为是纯内存操作，Redis的性能非常出色，每秒可以处理超过 10万次读写操作，是已知性能最快的Key-Value DB。
+使用redigo库操作redis
+连接
+c, err := redis.Dial(&amp;quot;tcp&amp;quot;, &amp;quot;172.17.84.205:6379&amp;quot;, redis.DialKeepAlive(1*time.Second), redis.DialPassword(&amp;quot;123456&amp;quot;), redis.DialConnectTimeout(5*time.Second), redis.DialReadTimeout(1*time.Second), redis.DialWriteTimeout(1*time.Second)) if err != nil { fmt.Println(&amp;quot;error:&amp;quot;, err) return } defer c.Close() 
+set/get key-value
+_, err = c.Do(&amp;quot;set&amp;quot;, &amp;quot;testkey&amp;quot;, &amp;quot;Hello Redis&amp;quot;) r, err := redis.String(c.Do(&amp;quot;get&amp;quot;, &amp;quot;testkey&amp;quot;)) 
+mset/mget 设置获取多个键值
+_, err = c.Do(&amp;quot;mset&amp;quot;, &amp;quot;name&amp;quot;, &amp;quot;Michael&amp;quot;, &amp;quot;gender&amp;quot;, &amp;quot;M&amp;quot;, &amp;quot;age&amp;quot;, 23, &amp;quot;postcode&amp;quot;, 2343253) stringValues, err := redis.Strings(c.Do(&amp;quot;mget&amp;quot;, &amp;quot;name&amp;quot;, &amp;quot;gender&amp;quot;)) intValues, err := redis.Ints(c.Do(&amp;quot;mget&amp;quot;, &amp;quot;age&amp;quot;, &amp;quot;postcode&amp;quot;)) for _, v := range stringValues { fmt.</description>
+    </item>
+    
+    <item>
+      <title>Golang View</title>
+      <link>http://example.org/2019/beegoview/</link>
+      <pubDate>Thu, 23 May 2019 11:28:22 +0800</pubDate>
+      
+      <guid>http://example.org/2019/beegoview/</guid>
+      <description>View可以实现web展示和用户交互功能，在视图中其实没有真正的处理发生，它只是作为一种输出数据并允许用户操纵的方式。go 统一使用了 {{ 和 }} 作为左右标签，没有其他的标签符号。
+ 使用 . 访问当前位置的上下文 使用 $ 引用当前模板根级的上下文 使用 $var 访问创建的变量  循环 range … end。
+&amp;lt;!-- Slice --&amp;gt; {{range .ContNumAll}} &amp;lt;option value=&amp;quot;{{.contnum}}&amp;quot;&amp;gt;{{.contnum}}&amp;lt;/option&amp;gt; {{end}} &amp;lt;!-- Map --&amp;gt; {{range $ind, $elem := .DeviceBrandMap}} &amp;lt;option value=&amp;quot;{{$elem.Name}}&amp;quot;&amp;gt;{{$elem.Name}}&amp;lt;/option&amp;gt; {{end}} 判断 if &amp;hellip; else &amp;hellip; end
+{{if .IsHomePage}} {{else}} {{if .IsPayed}}{{end}} {{end}} {{if .IsHome}} {{else if .IsAbout}} {{else}} {{end}} 比较 eq = / ne != / lt &amp;lt; / le &amp;lt;= / gt &amp;gt;/ ge &amp;gt;=</description>
+    </item>
+    
+    <item>
+      <title>Golang Controller</title>
+      <link>http://example.org/2019/beegocontrol/</link>
+      <pubDate>Sun, 19 May 2019 11:28:29 +0800</pubDate>
+      
+      <guid>http://example.org/2019/beegocontrol/</guid>
+      <description>Controller指Web开发人员编写，处理不同URL的控制器。Controller在整个的MVC框架中起到了一个核心的作用，负责处理业务逻辑，因此控制器是整个框架中必不可少的一部分。
+Beego的REST设计
+type ControllerInterface interface { Init(ct *Context, cn string) //初始化上下文和子类名称 Prepare() //开始执行之前的一些处理 Get() //method=GET的处理 Post() //method=POST的处理 Delete() //method=DELETE的处理 Put() //method=PUT的处理 Head() //method=HEAD的处理 Patch() //method=PATCH的处理 Options() //method=OPTIONS的处理 Finish() //执行完成之后的处理 Render() error //执行完method对应的方法之后渲染页面 } models/MainController.go
+package controllers import ( &amp;quot;github.com/astaxie/beego&amp;quot; ) type MainController struct { beego.Controller } func (this *MainController) Get() { this.Data[&amp;quot;Username&amp;quot;] = &amp;quot;astaxie&amp;quot; this.Data[&amp;quot;Email&amp;quot;] = &amp;quot;astaxie@gmail.com&amp;quot; this.TplNames = &amp;quot;index.tpl&amp;quot; } views/index.tpl
+&amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html&amp;gt; &amp;lt;head&amp;gt; &amp;lt;title&amp;gt;beego welcome template&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;Hello, world!</description>
+    </item>
+    
+    <item>
+      <title>Golang Model</title>
+      <link>http://example.org/2019/beegomodel/</link>
+      <pubDate>Tue, 14 May 2019 11:28:16 +0800</pubDate>
+      
+      <guid>http://example.org/2019/beegomodel/</guid>
+      <description>Web应用中用的一个重要环节就是数据库操作，Controller是可以处理一切的逻辑，但因为逻辑里面存在着可以复用代码，所以抽取出来成为一个新模块，而model层的设计目的就用来完成数据库的交互操作。
+初始化
+func init() { // 注册驱动 orm.RegisterDriver(&amp;quot;mysql&amp;quot;, orm.DR_MySQL) // 设置默认数据库 orm.RegisterDataBase(&amp;quot;default&amp;quot;, &amp;quot;mysql&amp;quot;, &amp;quot;root:root@/my_db?charset=utf8&amp;quot;, 30) // 注册定义的 model orm.RegisterModel(new(User)) // 创建 table orm.RunSyncdb(&amp;quot;default&amp;quot;, false, true) } MySQL配置:
+// 注册驱动 orm.RegisterDriver(&amp;quot;mysql&amp;quot;, orm.DR_MySQL) // 设置默认数据库 //mysql用户：root ，密码：123456 ， 数据库名称：test ， 数据库别名：default orm.RegisterDataBase(&amp;quot;default&amp;quot;, &amp;quot;mysql&amp;quot;, &amp;quot;root:123456@/test?charset=utf8&amp;quot;) ORM的CRUD
+// Model Struct type User struct { Id int Name string `orm:&amp;quot;size(100)&amp;quot;` } func main() { o := orm.NewOrm() user := User{Name: &amp;quot;slene&amp;quot;} // 插入表 id, err := o.</description>
+    </item>
+    
+    <item>
+      <title>Golang MySQL</title>
+      <link>http://example.org/2019/sql/</link>
+      <pubDate>Fri, 10 May 2019 11:27:51 +0800</pubDate>
+      
+      <guid>http://example.org/2019/sql/</guid>
+      <description>Go没有内置的驱动支持任何数据库，但是Go定义了database/sql接口，用户可以基于驱动接口开发相应数据库的驱动，但需要开发者在代码里拼接sql语句。
+数据库连接信息
+const ( USERNAME = &amp;quot;root&amp;quot; PASSWORD = &amp;quot;123456&amp;quot; NETWORK = &amp;quot;tcp&amp;quot; SERVER = &amp;quot;127.0.0.1&amp;quot; PORT = 3306 DATABASE = &amp;quot;test&amp;quot; ) 结构体定义
+type User struct { Id int `form:&amp;quot;id&amp;quot;` Username string `form:&amp;quot;username&amp;quot;` Password string `form:&amp;quot;password&amp;quot;` Status int `form:&amp;quot;status&amp;quot;` // 0 正常状态， 1删除 Createtime int64 `form:&amp;quot;createtime&amp;quot;` } Create
+func CreateTable(DB *sql.DB) { sql := `CREATE TABLE IF NOT EXISTS users( id INT(4) PRIMARY KEY AUTO_INCREMENT NOT NULL, username VARCHAR(64), password VARCHAR(64), status INT(4), createtime INT(10) ); ` if _, err := DB.</description>
+    </item>
+    
+    <item>
+      <title>Golang Reflect</title>
+      <link>http://example.org/2019/reflect/</link>
+      <pubDate>Thu, 18 Apr 2019 11:23:07 +0800</pubDate>
+      
+      <guid>http://example.org/2019/reflect/</guid>
+      <description>反射是指在程序运行期对程序本身进行访问和修改的能力。程序在编译时，变量被转换为内存地址，变量名不会被编译器写入到可执行部分。在运行程序时，程序无法获取自身的信息。
+支持反射的语言可以在程序编译期将变量的反射信息，如字段名称、类型信息、结构体信息等整合到可执行文件中，并给程序提供接口访问反射信息，这样就可以在程序运行期获取类型的反射信息，并且有能力修改它们。
+在Go语言中反射的相关功能由内置的reflect包提供，任意接口值在反射中都可以理解为由reflect.Type和reflect.Value两部分组成，并且reflect包提供了reflect.TypeOf和reflect.ValueOf两个函数来获取任意对象的Type和Value。
+func main() { u:= User{&amp;quot;张三&amp;quot;,20} // reflect.TypeOf可以获取任意对象的具体类型 t:=reflect.TypeOf(u) // reflect.ValueOf可以获取任意对象的Value v:=reflect.ValueOf(u) fmt.Println(t) fmt.Println(v) } type User struct{ Name string Age int } 
+reflect.Value同时持有一个对象的reflect.Value和reflect.Type,所以我们可以通过reflect.Value的Interface方法实现还原。
+u1:=v.Interface().(User) t1:=v.Type() fmt.Println(u1) fmt.Println(t1) 
+遍历字段和方法
+for i:=0; i&amp;lt;t.NumField(); i++ { fmt.Println(t.Field(i).Name) } for i:=0; i&amp;lt;t.NumMethod(); i++ { fmt.Println(t.Method(i).Name) } 修改字段的值
+在运行中动态的修改某个字段的值
+func main() { x:=2 // 避免值拷贝，需要传入要修改变量的地址 v:=reflect.ValueOf(&amp;amp;x) v.Elem().SetInt(100) fmt.Println(x) } 
+动态调用方法
+type User struct{ Name string Age int } func (u User) Print(prfix string){ fmt.</description>
+    </item>
+    
+    <item>
+      <title>Golang Test &amp; Benchmark</title>
+      <link>http://example.org/2019/test/</link>
+      <pubDate>Fri, 12 Apr 2019 11:27:09 +0800</pubDate>
+      
+      <guid>http://example.org/2019/test/</guid>
+      <description>Go语言中的测试依赖go test命令。编写测试代码和编写普通的Go代码过程是类似的，并不需要学习新的语法、规则或工具。
+go test命令是一个按照一定约定和组织的测试代码的驱动程序。在包目录内，所有以_test.go为后缀名的源代码文件都是go test测试的一部分，不会被go build编译到最终的可执行文件中。
+method.go
+func AddFunction(a, b int) int { return a + b } method_test.go
+func TestAdd(t *testing.T) { res := AddFunction(1, 2) if res == 3 { t.Log(&amp;quot;Ok&amp;quot;) } else { t.Fatal(&amp;quot;Error&amp;quot;) } } 在终端相应的目录中运行 go test -v
+% go test -v === RUN TestAdd --- PASS: TestAdd (0.00s) method_test.go:26: Ok PASS ok example/fortest 0.007s 
+基准测试主要是通过测试CPU和内存的效率问题，来评估被测试代码的性能，进而找到更好的解决方案。
+bench_test.go
+func BenchmarkSprintf(b *testing.B){ num:=10 b.ResetTimer() for i:=0;i&amp;lt;b.N;i++{ fmt.</description>
+    </item>
+    
+    <item>
+      <title>Golang OOP</title>
+      <link>http://example.org/2019/oop/</link>
+      <pubDate>Tue, 02 Apr 2019 11:01:17 +0800</pubDate>
+      
+      <guid>http://example.org/2019/oop/</guid>
+      <description>封装 -&amp;gt; func
+// func main() { // fmt.println(1) // fmt.println(1) // fmt.println(0) // } func callPolice() { fmt.println(1) fmt.println(1) fmt.println(0) } func main() { callPolice() } 
+继承 -&amp;gt; 匿名内部类
+type father struct { A int B int } type son struct { father C int } func main() { newSon := &amp;amp;son{ father: father{ A: 1, B: 2, }, C: 3, } fmt.Println(newSon.A) } 
+多态 -&amp;gt; interface</description>
+    </item>
+    
+    <item>
+      <title>Hong Kong</title>
+      <link>http://example.org/2019/hongkong/</link>
+      <pubDate>Sat, 23 Mar 2019 21:09:14 +0800</pubDate>
+      
+      <guid>http://example.org/2019/hongkong/</guid>
+      <description>香港
+维多利亚港湾
+怪兽大厦 Apple 石澳海滩 </description>
+    </item>
+    
+    <item>
+      <title>Sichuan</title>
+      <link>http://example.org/2018/sichuan/</link>
+      <pubDate>Thu, 08 Nov 2018 20:36:18 +0800</pubDate>
+      
+      <guid>http://example.org/2018/sichuan/</guid>
+      <description>四川
+成都动物园 夏羌拉雪山</description>
+    </item>
+    
+    <item>
+      <title>Receptive Field</title>
+      <link>http://example.org/2018/receptive/</link>
+      <pubDate>Wed, 10 Oct 2018 13:52:29 +0800</pubDate>
+      
+      <guid>http://example.org/2018/receptive/</guid>
+      <description>The receptive field is defined as the region in the input space that a particular CNN’s feature is looking at.
+在卷积神经网络中，感受野（Receptive Field）的定义是卷积神经网络每一层输出的特征图（feature map）上每个像素点在原始图像上映射的区域大小。
+神经元之所以无法对原始图像的所有信息进行感知，是因为在卷积神经网络中普遍使用卷积层和pooling层，在层与层之间均为局部连接。
+神经元感受野的值越大表示其能接触到的原始图像范围就越大，也意味着它可能蕴含更为全局，语义层次更高的特征；相反，值越小则表示其所包含的特征越趋向局部和细节。因此感受野的值可以用来大致判断每一层的抽象层次。 深层卷积层的感受野大小和它之前所有层的滤波器大小和步长有关系，而涉及到这两个参数的有卷积层和pooling层。我们用分别 $k_n, s_n, r_n$ 表示第n层的kernel_size，stride，receptive_field，通过对 n-1层输出特征图的 $k_n*k_n$ 个感受野为 $r_{n−1}$ 的特征单元卷积得到的n层输出特征单元最大的感受野为 $r_{n−1}*kn$ ，但在对 n-1层输入特征图进行卷积时，经常会由于 $s_{n−1}$ 小于 $k_{n−1}$ 而存在重叠，因此要减去个重叠部分（ $k_n=2$ 存在一个重叠部分，$k_n=3$ 存在两个重叠部分）
+重叠的部分一定是与stride的有关的,如果stride很大,显然是不会有重合,所以,越小重合越多。
+要求第n层输出的感受野,就要知道前一层n-1的感受野,以及本层的kernel和stride大小,这是一个不断递推的过程.
+对于卷积神经网络,其感受野计算有如下规律: $$ \begin{equation} \begin{split} \ r_n &amp;amp;= r_{n-1}*k_n-(r_{n-1}-\prod^{n-1}_{i=1}{s_i})*(k_n-1) \
+\end{split} \tag{1} \end{equation} $$
+经过简单的代数变换之后，最终形式为： $$ \begin{equation} \begin{split} \ r_n &amp;amp;= r_{n-1}+(k_n-1)\prod^{n-1}_{i=1}{s_i} \
+\end{split} \tag{2} \end{equation} $$</description>
+    </item>
+    
+    <item>
+      <title>Graphviz</title>
+      <link>http://example.org/2018/graphviz/</link>
+      <pubDate>Sun, 30 Sep 2018 00:38:09 +0800</pubDate>
+      
+      <guid>http://example.org/2018/graphviz/</guid>
+      <description>个性化实验预测的可视化，需要对训练过程中树的生长进行可视化。
+准备工具：
+ Graphviz desktop-version Graphviz pydotplus  from sklearn import tree from subprocess import check_call from PIL import Image, ImageDraw, ImageFont from IPython.display import Image as PImage decision_tree = tree.DecisionTreeRegressor(max_depth = 3) decision_tree.fit(train_df, yt) # Export our trained model as a .dot file with open(&amp;quot;tree1.dot&amp;quot;, &#39;w&#39;) as f: f = tree.export_graphviz(decision_tree, #训练完的model out_file=f, #输出的路径 max_depth = 4, #只要四层 impurity = False, feature_names = train_df.columns.values, class_names = [&#39;No&#39;, &#39;Yes&#39;], rounded = True, filled= True ) #Convert .</description>
+    </item>
+    
+    <item>
+      <title>YOLO</title>
+      <link>http://example.org/2018/yolo/</link>
+      <pubDate>Fri, 17 Aug 2018 17:09:18 +0800</pubDate>
+      
+      <guid>http://example.org/2018/yolo/</guid>
+      <description>YOLOV1
+YOLO的思想：将整张图片作为输入，直接在输出层回归bounding box的位置及其所属类别
+和RCNN、faster-RCNN的不同：这两者也是将整张图片作为输入，但是faster-RCNN采用RCNN的proposal+classifier思想。将提取proposal的步骤放在CNN中，而yolo则采用直接回归的思想
+实现方法：
+ 将image分成S*S个grid cell，如果某个object的中心落在grid cell中，则由这个grid cell负责预测该object 每个grid cell负责预测B个bounding box，每个bounding box除了要回归自身的位置和大小外，还需要预测一个confidence 这个confidence代表了所预测的box中含有object的置信度和这个box预测的有多准，每个bounding box 要预测(x,y,w,h)和confidence。每个grid cell要预测一个类别信息，记为C类。则S*S个grid cell，每个grid要预测B个bounding box和C个类别，输出就是：S * S *（5 * B + C)的tensor 在test时，每个grid cell预测的class信息和bounding box预测的confidence相乘，得到的每个class-specific confidence score之后，设置阈值，滤掉得分低的boxes，对保留的boxes进行NMS处理，就得到最终结果  缺点：
+ 输出层为全连接层，在检测时，YOLO训练模型只支持与训练图像相同的输入分辨率 虽然每个grid cell可以预测B个bounding box，但最终只选择IOU最高的bounding box作为检测输出，即每个grid最多只预测一个物体   YOLOV2改进
+ 使用BN，提高网络收敛性，对每一个卷卷积层增加BN。BN就是把隐层神经元激活输入拉回到均值为0，方差为1的正太分布。经过BN后，目前大部分Activation的值落入非线性函数的线性区间内，其对应的导数远离导数饱和区，这样来加速训练收敛过程。 YOLOv1有全连接，从而只能直接预测bounding box的坐标值。Faster-RCNN的方法只用卷积层与Region proposal Network来预测anchor box偏移值与置信度，而不直接预测坐标值。发现通过预测偏移值而非坐标值能够简化问题。去掉全连接。使用Anchor box来预测bounding box Anchor box，在训练集的bounding box跑一下k-means聚类，找到一个较好的值 更精细度的特征，加上passthrough layer来取得之前某个26 * 26分辨率特征，把高分辨率和低分辨率特征联系在一起 多尺度训练，yolov2每迭代几次都会改变网络参数，每10个batch，网络随机选择新图片尺寸   YOLOV3改进
+ 多尺度预测，每种尺度预测3个box，anchor依然使用聚类，得到9个聚类中心，将其按大小均分给3个尺度 尺度1：在基础网络之后添加一些卷积层再输出box信息 尺度2：从尺度1中的倒数第二层卷积层上采样再与最后一个16*16大小特征图相加，再次通过多个卷积后输出box信息，相比尺度1变大两倍 尺度3：与尺度2类似，使用3232大小特征图 更好的基础网络，resnet和分类器darknet 53。 分类器-类别预测，yolov3不使用softmax分类，因为softmax使得每个框只能识别一个类别，而用多个logstic分类器替代softmax准确率不会下降，分类损失采用binary cross-entropy loss。  </description>
+    </item>
+    
+    <item>
+      <title>RCNN</title>
+      <link>http://example.org/2018/rcnn/</link>
+      <pubDate>Thu, 26 Jul 2018 00:00:20 +0800</pubDate>
+      
+      <guid>http://example.org/2018/rcnn/</guid>
+      <description>RCNN
+ 利用selective-search方法提取2000个自下而上的region proposal； 针对每一个region proposal我们用一个大的CNN网络计算特征； 利用线性SVM分类器对每个region proposal进行分类； 进行回归分析调整region proposal区域。  Fast-RCNN
+ 读取整个图片和一个ROI （Regions of Interest，也就是一系列划分的bounding box）集合作为输入)； 然后convnet从整个图片中提取特征，得到feature map； 对每一个ROI区域，pooling层从feature map中提取一个固定大小的feature factor； feature factor被送往FC（fully-connected layer），被映射到两个部分，一部分是评估k个目标类加上catch-all&amp;quot;背景&amp;quot;类的softmax probability；另一部分产生bbox regressor，即针对k个目标对象的每一个4值真值数量（4 real-valued numbers），每个4值编码集合（set of 4 values）K类目标对象之一的bounding-box位置。  Faster-RCNN
+ 针对整张图片，利用CNN获取feature map； 利用RPN网络针对feature map进行全连接运算，将其输出为256d或者512d的低维特征向量。⚠️RPN介绍：Region Proposal Network，利用卷积后的特征图生成region proposal，通过增加两个卷积层实现，RPN网络输出的是坐标和score两类。 最后将该低维向量送入两个全连接层，即box回归层和box分类层。  RCNN系列是将目标检测分为两部分实现的：
+ 物体的类别；分类问题。 物体的区域，即bounding box，回归问题。  </description>
+    </item>
+    
+    <item>
+      <title>Non Maximum Suppression</title>
+      <link>http://example.org/2018/nms/</link>
+      <pubDate>Sat, 02 Jun 2018 16:22:37 +0800</pubDate>
+      
+      <guid>http://example.org/2018/nms/</guid>
+      <description>IOU(区域交并比) IOU的原称为Intersection over Union，也就是两个box区域的交集比上并集，用于确定两个框的位置像素距离。 计算两个边框 IoU 的公式如下所示:
+算法逻辑：
+ 输入: n 行 4 列的候选框数组, 以及对应的 n 行 1 列的置信度数组. 输出: m 行 4 列的候选框数组, 以及对应的 m 行 1 列的置信度数组, m 对应的是去重后的候选框数量  绝大部分人脸检测器的核心是分类器，即给定一个尺寸固定图片，分类器判断是或者不是人脸；将分类器进化为检测器的关键是：在原始图像上从多个尺度产生窗口，并resize到固定尺寸，然后送给分类器做判断。最常用的方法是滑动窗口。
+由于滑动窗口，同一个人可能有好几个框(每一个框都带有一个分类器得分)
+而我们的目标是一个人只保留一个最优的框。 于是我们就要用到非极大值抑制，来抑制那些冗余的框： 抑制的过程是一个迭代-遍历-消除的过程。
+将所有框的得分排序，选中最高分及其对应的框：
+遍历其余的框，如果和当前最高分框的重叠面积(IOU)大于一定阈值，我们就将框删除。
+从未处理的框中继续选一个得分最高的，重复上述过程。
+算法流程：
+ 计算 n 个候选框的面积大小 对置信度进行排序, 获取排序后的下标序号, 即采用argsort 将当前置信度最大的框加入返回值列表中 获取当前置信度最大的候选框与其他任意候选框的相交面积 利用相交的面积和两个框自身的面积计算框的交并比, 将交并比大于阈值的框删除. 对剩余的框重复以上过程  Python
+import cv2 import numpy as np def nms(bounding_boxes, confidence_score, threshold): if len(bounding_boxes) == 0: return [], [] bboxes = np.</description>
+    </item>
+    
+    <item>
+      <title>Wordcloud</title>
+      <link>http://example.org/2018/wordcloud/</link>
+      <pubDate>Thu, 10 May 2018 19:55:43 +0800</pubDate>
+      
+      <guid>http://example.org/2018/wordcloud/</guid>
+      <description>wordcloud标签云
+WordCloud()参数介绍：
+ font_path：指定字体路径，包括otf和ttf width：词云的宽度，默认为400 height：词云的高度，默认为200 mask：定制词云的形状，通常结合PIL&amp;amp;numpy一起使用，其中PIL可以用python读取图片；numpy可将PIL读取的图片转换为数字的形式，最后作为对象传递给mask min_font_size：最小字号，默认为4 max_font_size：最大字号，默认为词云的高度 max_words：词的最大数量，默认为200 stopwords：被忽略的停用词，如果不指定则使用默认的停用词词库 background_color：背景颜色，默认black mode：默认RGB模式，如果为RGBA模式并且background_color为None，则背景变为透明  DIY词云字体
+from wordcloud import WordCloud import matplotlib.pyplot as plt import jieba text = open(&#39;xiyouji.txt&#39;).read() # 西游记 text = &#39; &#39;.join(jieba.cut(text)) #jieba分词做好后是list的形式，这里将他们变成以空格隔开的字符串形式，类似于英文的表达形式 wc = WordCloud(font_path=&#39;Hiragino.ttf&#39;, width=800, height=600, mode=&#39;RGBA&#39;, background_color=None).generate(text) plt.imshow(wc, interpolation=&#39;bilinear&#39;) plt.axis(&#39;off&#39;) # 关闭图片的坐标轴 plt.show() 使用特定形状的图片做标签云
+from wordcloud import WordCloud from PIL import Image import numpy as np import matplotlib.pyplot as plt import jieba text = open(&#39;xiyouji.txt&#39;).read() text = &#39; &#39;.</description>
+    </item>
+    
+    <item>
+      <title>Bootstrap</title>
+      <link>http://example.org/2018/bootstrap/</link>
+      <pubDate>Thu, 03 May 2018 14:48:36 +0800</pubDate>
+      
+      <guid>http://example.org/2018/bootstrap/</guid>
+      <description>Bootstrap是一类非参数Monte Carlo方法，其实质是对观测信息进行再抽样，进而对总体的分布特性进行统计推断。
+Bootstrap通过重抽样，可以避免了Cross-Validation造成的样本减少问题，其次，Bootstrap也可以用于创造数据的随机性。比如，我们所熟知的随机森林算法第一步就是从原始训练数据集中，应用bootstrap方法有放回地随机抽取k个新的自助样本集，并由此构建k棵分类回归树。
+假设有两个金融资产X和Y，现在想要合理配置这两个资产，如何使得其资产组合的风险最小？这个问题几十年前马尔可维茨已经在其投资组合理论里给出了解答，最优解表达式如下：
+$$ \begin{equation} \begin{split} \ \alpha &amp;amp;= \frac{\sigma^2_Y-\sigma_{XY}}{\sigma^2_X + \sigma^2_Y - 2\sigma_{XY}} \
+\end{split} \tag{1} \end{equation} $$
+其中 $$ \begin{equation} \begin{split} \ \sigma^2_X &amp;amp;= Var(X),\sigma^2_Y=Var(Y), \sigma_{XY}=Cov(X, Y) \
+\end{split} \tag{2} \end{equation} $$ 但是现实生活中实际上并不知道X&amp;amp;Y的方差以及XY的协方差，故而只能通过X和Y的一系列样本对其进行估计。 自从有了Bootstrap之后，可以更好地去做估计总体的分布特性。
+Bootstrap步骤：
+  在原有的样本中通过重抽样抽取一定数量（比如100）的新样本，重抽样（Re-sample）的意思就是有放回的抽取，即一个数据有可以被重复抽取超过一次。
+  基于产生的新样本，计算需要估计的统计量。
+  重复上述步骤n次（一般是n&amp;gt;1000次）
+  计算被估计量的均值和方差
+  通过Bootstrap方法还可以估计accuracy，也就是其Standard Error。这是利用原有样本进行一次估计所做不到的。
+不仅是的标准差，如果想要估计的中位数、分位数等统计量，也是可以通过Boostrap方法做到的，其整个流程可以用下面一张图诠释： 本质上，Bootstrap方法，是将一次的估计过程，重复上千次上万次，从而便得到了得到上千个甚至上万个的估计值，利用这不止一次的估计值，就可以估计均值以外的其他统计量：比如标准差、中位数等。</description>
+    </item>
+    
+    <item>
+      <title>Stacking Model</title>
+      <link>http://example.org/2018/stack_model/</link>
+      <pubDate>Tue, 24 Apr 2018 10:41:04 +0800</pubDate>
+      
+      <guid>http://example.org/2018/stack_model/</guid>
+      <description>Regression Ensembel by different stack model prediction
+mixed_predition作为最后预测y_true的features
+Code:
+class Ensemble(object): def __init__(self, n_splits, stacker, base_models): self.n_splits = n_splits self.stacker = stacker self.base_models = base_models def fit_predict(self, X, y, T): X = np.array(X) y = np.array(y) T = np.array(T) folds = list(KFold(n_splits=self.n_splits, shuffle=True, random_state=2016).split(X, y)) S_train = np.zeros((X.shape[0], len(self.base_models))) S_test = np.zeros((T.shape[0], len(self.base_models))) for i, clf in enumerate(self.base_models): S_test_i = np.zeros((T.shape[0], self.n_splits)) for j, (train_idx, test_idx) in enumerate(folds): X_train = X[train_idx] y_train = y[train_idx] X_holdout = X[test_idx] print (&amp;quot;Fit Model %d fold %d&amp;quot; % (i, j)) clf.</description>
+    </item>
+    
+    <item>
+      <title>ROC &amp; AUC</title>
+      <link>http://example.org/2018/roc/</link>
+      <pubDate>Sat, 14 Apr 2018 18:07:19 +0800</pubDate>
+      
+      <guid>http://example.org/2018/roc/</guid>
+      <description>预备知识：
+ TP（True Positive）：指正确分类的正样本数，即预测为正样本，实际也是正样本。 FP（False Positive）：指被错误的标记为正样本的负样本数，即实际为负样本而被预测为正样本，所以是False。 TN（True Negative）：指正确分类的负样本数，即预测为负样本，实际也是负样本。 FN（False Negative）：指被错误的标记为负样本的正样本数，即实际为正样本而被预测为负样本，所以是False。 TP+FP+TN+FN：样本总数。 TP+FN：实际正样本数。 TP+FP：预测结果为正样本的总数，包括预测正确的和错误的。 FP+TN：实际负样本数。 TN+FN：预测结果为负样本的总数，包括预测正确的和错误的。  TPR指实际正样本中被预测正确的概率。 真正例率 (TPR) 是召回率的同义词，因此定义如下： $$ \begin{equation} \begin{split} \ TPR &amp;amp;= \frac{TP}{TP+FN} \
+\end{split} \tag{1} \end{equation} $$ FPR指实际负样本中被错误预测为正样本的概率。 假正例率 (FPR) 的定义如下： $$ \begin{equation} \begin{split} \ FPR &amp;amp;= \frac{FP}{FP+TN} \
+\end{split} \tag{2} \end{equation} $$ ROC（Receiver Operating Characteristic），平面的横坐标是false positive rate(FPR)假阳率，纵坐标是true positive rate(TPR)真阳率。 ROC计算过程如下：
+ 首先每个样本都需要有一个label值，并且还需要一个预测的score值（取值0到1）; 然后按这个score对样本由大到小进行排序，假设这些数据位于表格中的一列，从上到下依次降序; 现在从上到下按照样本点的取值进行划分，位于分界点上面的我们把它归为预测为正样本，位于分界点下面的归为负样本; 分别计算出此时的TPR（Recall）=TP/P和FPR（1-SP）=FP/N，然后在图中绘制（FPR, TPR）点。 从上往下逐个样本计算，最后会得到一条光滑的曲线    AUC（Area Under Curve）是机器学习常用的二分类评测手段，直接含义是ROC曲线下的面积。另一种解释是：随机抽出一对样本（一个正样本，一个负样本），然后用训练得到的分类器来对这两个样本进行预测，预测得到正样本概率大于负样本概率的概率。所以AUC反应的是分类器对样本的排序能力。
+计算步骤：</description>
+    </item>
+    
+    <item>
+      <title>Heatmap</title>
+      <link>http://example.org/2018/heatmap/</link>
+      <pubDate>Tue, 27 Mar 2018 20:13:19 +0800</pubDate>
+      
+      <guid>http://example.org/2018/heatmap/</guid>
+      <description>皮尔逊系数与特征重要性的关系 colormap = plt.cm.RdBu plt.figure(figsize = (14, 12)) plt.title(&#39;heatmap&#39;, y=1.05, size=15) sns.heatmap(train.astype(float).corr(), linewidths=0.1, vmax=1.0, square=True, cmap=colormap, linecolor=&#39;white&#39;, fmt=&#39;.2f&#39;, annot=True) linewidth：每个值之间的间距。
+fmt：在作图过程中保留的小数位（对原始数据无伤害）
+linecolor：每个格子之间的线颜色
+annot：是否显示格子上的数值
+下三角heatmap：
+corr = np.round(train_df.corr(), 3) mask = np.zeros_like(corr, dtype=np.bool) mask[np.triu_indices_from(mask)] = True sns.set(style=&amp;quot;white&amp;quot;) f, ax = plt.subplots(figsize=(10, 9)) cmap = sns.diverging_palette(30, 10, as_cmap=True) #这两个差距尽可能的大，因为如果太相近的话，正负极限的时候颜色差不多 sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0, square=True, linewidths=.1, annot=True, cbar_kws={&amp;quot;shrink&amp;quot;: .5})  Update（提取对结果可能重要的部分特征）
+# most correlated features corrmat = train.corr() top_corr_features = corrmat.index[abs(corrmat[&amp;quot;SalePrice&amp;quot;]) &amp;gt; 0.</description>
+    </item>
+    
+    <item>
+      <title>Adaboost</title>
+      <link>http://example.org/2018/adaboost/</link>
+      <pubDate>Sat, 17 Mar 2018 22:43:07 +0800</pubDate>
+      
+      <guid>http://example.org/2018/adaboost/</guid>
+      <description>Adaboost AdaBoost是英文&amp;quot;Adaptive Boosting&amp;rdquo;（自适应增强）的缩写，它的自适应在于：前一个基本分类器被错误分类的样本的权值会增大，而正确分类的样本的权值会减小，并再次用来训练下一个基本分类器。同时，在每一轮迭代中，加入一个新的弱分类器，直到达到某个预定的足够小的错误率或达到预先指定的最大迭代次数才确定最终的强分类器。
+Adaboost算法可以简述为三个步骤：
+1、初始化训练数据的权值分布，每一个训练样本最开始时，都被赋予相同的权值。 $$ \begin{equation} \begin{split} \ w_1 &amp;amp;= \frac{1}{N} \
+\end{split} \tag{1} \end{equation} $$ 2、训练弱分类器，如果某个训练样本点，被当前弱分类器准确地分类，那么在构造下一个训练集中，它对应的权值要减小；相反，如果某个训练样本点被错误分类，那么它的权值就应该增大。权值更新过的样本集被用于训练下一个分类器，整个训练过程如此迭代地进行下去。
+第k个弱分类器在训练集上的加权误差率为： $$ \begin{equation} \begin{split} \ e_k &amp;amp;= P(G_k(x_i)\neq y_i) \
+&amp;amp;= \sum^{m}_{i=1}{W_aI(G_k(x_i) \neq y_i)} \quad s.t \quad a=ki \end{split} \tag{2} \end{equation} $$
+第k个弱分类器Gk(x)的权重系数为： $$ \begin{equation} \begin{split} \ \alpha_k &amp;amp;= \frac{1}{2}log\frac{1-e_k}{e_k} \
+\end{split} \tag{3} \end{equation} $$
+第k+1个弱分类器的样本集权重系数为： $$ \begin{equation} \begin{split} \ W_b &amp;amp;= \frac{W_a}{Z_k}e^{(-\alpha_k\ y_i\ G_k(x_i))} \quad s.t \ \ b=(k+1)i,\ a=ki\
+\end{split} \tag{4} \end{equation} $$ 其中Zk是规范化因子： $$ \begin{equation} \begin{split} \ Z_k &amp;amp;= \sum^{m}_{i=1}{W_ae^{(-\alpha_k\ y_i\ G_k(x_i))}} \quad s.</description>
+    </item>
+    
+    <item>
+      <title>Logistic Regression</title>
+      <link>http://example.org/2018/logisticregression/</link>
+      <pubDate>Thu, 15 Mar 2018 15:12:00 +0800</pubDate>
+      
+      <guid>http://example.org/2018/logisticregression/</guid>
+      <description>逻辑回归（Logistic Regression） 是一种用于分类的传统机器学习方法。它是通过对已有的样本进行学习，配合sigmoid函数将结果收敛到[0,1]之间，设定一个阈值，目标值大于设定阈值的分类为一类，反之设为另一类。逻辑回归一般用于二分类问题，线性回归的公式如下：
+$$ \begin{equation} \begin{split} \ z &amp;amp;= \beta_0+\beta_1x_1+&amp;hellip;+\beta_nx_n \
+&amp;amp;= \theta^Tx \end{split} \tag{1} \end{equation} $$
+sigmoid函数公式如下： $$ \begin{equation} \begin{split} \ h_\theta(x)=g(\theta^Tx)=\frac{1}{1+e^{-z}} \
+&amp;amp;= \frac{1}{1+e^{-\theta^Tx}} \end{split} \tag{2} \end{equation} $$
+使用极大似然估计求解Cost Function及梯度，假设类别为1的概率为： $$ \begin{equation} \begin{split} \ P(y_i=1|x_i;\theta) \
+&amp;amp;=h_\theta(x_i) \end{split} \tag{3} \end{equation} $$ 所以类别为0的概率为： $$ \begin{equation} \begin{split} \ P(y_i=0|x_i;\theta) \
+&amp;amp;=1-h_\theta(x_i) \end{split} \tag{4} \end{equation} $$ 因为逻辑回归中的事件符合伯努利分布，所以逻辑回归的概率密度函数可记做：连续型随机变量的概率密度函数（在不至于混淆时可以简称为密度函数）。这是一个描述这个随机变量的输出值，在某个确定的取值点附近的可能性的函数。而随机变量的取值落在某个区域之内的概率则为概率密度函数在这个区域上的积分。 $$ \begin{equation} \begin{split} \ P(y_i|x_i;\theta)=h_\theta(x_i)(1-h_\theta(x_i)) \
+\end{split} \tag{5} \end{equation} $$ 可变形为： $$ \begin{equation} \begin{split} \ P(y_i|x_i;\theta)=h_\theta(x_i)^{y_i}(1-h_\theta(x_i))^{1-y_i} \</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,338 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+    <url>
+      <loc>http://example.org/2020/blur/</loc>
+      
+      <lastmod>2020-05-05T10:22:42+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/posts/</loc>
+      
+      <lastmod>2020-05-05T10:22:42+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/</loc>
+      
+      <lastmod>2020-05-05T10:22:42+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2020/captcha/</loc>
+      
+      <lastmod>2020-04-20T11:43:38+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2020/sort/</loc>
+      
+      <lastmod>2020-03-18T11:48:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/channel/</loc>
+      
+      <lastmod>2019-10-23T11:46:41+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/goroutine/</loc>
+      
+      <lastmod>2019-08-15T11:46:48+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/sessionsync/</loc>
+      
+      <lastmod>2019-07-16T11:28:51+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/session/</loc>
+      
+      <lastmod>2019-07-12T11:28:47+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/redis/</loc>
+      
+      <lastmod>2019-06-03T11:28:36+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/beegoview/</loc>
+      
+      <lastmod>2019-05-23T11:28:22+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/beegocontrol/</loc>
+      
+      <lastmod>2019-05-19T11:28:29+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/beegomodel/</loc>
+      
+      <lastmod>2019-05-14T11:28:16+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/sql/</loc>
+      
+      <lastmod>2019-05-10T11:27:51+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/reflect/</loc>
+      
+      <lastmod>2019-04-18T11:23:07+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/test/</loc>
+      
+      <lastmod>2019-04-12T11:27:09+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/oop/</loc>
+      
+      <lastmod>2019-04-02T11:01:17+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2019/hongkong/</loc>
+      
+      <lastmod>2019-03-23T21:09:14+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/sichuan/</loc>
+      
+      <lastmod>2018-11-08T20:36:18+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/receptive/</loc>
+      
+      <lastmod>2018-10-10T13:52:29+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/graphviz/</loc>
+      
+      <lastmod>2018-09-30T00:38:09+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/yolo/</loc>
+      
+      <lastmod>2018-08-17T17:09:18+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/rcnn/</loc>
+      
+      <lastmod>2018-07-26T00:00:20+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/nms/</loc>
+      
+      <lastmod>2018-06-02T16:22:37+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/wordcloud/</loc>
+      
+      <lastmod>2018-05-10T19:55:43+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/bootstrap/</loc>
+      
+      <lastmod>2018-05-03T14:48:36+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/stack_model/</loc>
+      
+      <lastmod>2018-04-24T10:41:04+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/roc/</loc>
+      
+      <lastmod>2018-04-14T18:07:19+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/heatmap/</loc>
+      
+      <lastmod>2018-03-27T20:13:19+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/adaboost/</loc>
+      
+      <lastmod>2018-03-17T22:43:07+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/2018/logisticregression/</loc>
+      
+      <lastmod>2018-03-15T15:12:00+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/about/</loc>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/categories/</loc>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>http://example.org/tags/</loc>
+      
+      
+      
+      
+    </url>
+  
+</urlset>

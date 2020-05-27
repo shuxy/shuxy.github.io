@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2019/channel/" />
+  <link rel="next" href="http://example.org/2020/captcha/" />
+  <link rel="canonical" href="http://example.org/2020/sort/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Golang Sort | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Golang Sort | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Golang Sort",
+    "headline" : "Golang Sort",
+    "description" : "快速排序\n通过一趟排序将待排记录分隔成独立的两部分，其中一部分记录的关键字均比另一部分的关键字小，则可分别对这两部分记录继续进行排序，以达到整个序列有序。\n 如果不多于1个数据，直接返回。 一般选择序列最左边的值作为支点数据。 将序列分成2部分，一部分都大于支点数据，另外一部分都小于支点数据。 对两边利用递归排序数列。  func quickSort(s []int, left, right int) { if left \x26gt;= right { return } \/\/ 调整基准的索引 i := quickAdjust(s, left, right) \/\/ 调整左边的序列 quickSort(s, left, i-1) \/\/ 调整右边的序列 quickSort(s, i\x2b1, right) } \/\/ 返回调整后基准数的位置，基准数取s[left] func quickAdjust(s []int, left, right int) int { i, j := left, right for i \x26lt; j { \/\/ 从右向左找小于基准的数 for i \x26lt; j \x26amp;\x26amp; s[j] \x26gt;= s[left] { j-- } \/\/ 从左向右找大于基准的数 for i \x26lt; j \x26amp;\x26amp; s[i] \x26lt;= s[left] { i\x2b\x2b } \/\/ 交换 if i \x26lt; j { s[i], s[j] = s[j], s[i] } } \/\/ 调整基准的位置 s[left], s[i] = s[i], s[left] return i } 归并排序",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-03-18 11:48:24 \x2b0800 CST",
+    "dateModified" : "2020-03-18 11:48:24 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2020\/sort\/",
+    "wordCount" : "400",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Golang Sort</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2020-03-18 itemprop="datePublished">March 18, 2020</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>快速排序</strong><br>
+通过一趟排序将待排记录分隔成独立的两部分，其中一部分记录的关键字均比另一部分的关键字小，则可分别对这两部分记录继续进行排序，以达到整个序列有序。</p>
+<ol>
+<li>如果不多于1个数据，直接返回。</li>
+<li>一般选择序列最左边的值作为支点数据。</li>
+<li>将序列分成2部分，一部分都大于支点数据，另外一部分都小于支点数据。</li>
+<li>对两边利用递归排序数列。</li>
+</ol>
+<pre><code>func quickSort(s []int, left, right int) {
+   if left &gt;= right {
+      return
+   }
+   // 调整基准的索引
+   i := quickAdjust(s, left, right)
+   // 调整左边的序列
+   quickSort(s, left, i-1)
+   // 调整右边的序列
+   quickSort(s, i+1, right)
+}
+
+// 返回调整后基准数的位置，基准数取s[left]
+func quickAdjust(s []int, left, right int) int {
+   i, j := left, right
+   for i &lt; j {
+      // 从右向左找小于基准的数
+      for i &lt; j &amp;&amp; s[j] &gt;= s[left] {
+         j--
+      }
+      // 从左向右找大于基准的数
+      for i &lt; j &amp;&amp; s[i] &lt;= s[left] {
+         i++
+      }
+      // 交换
+      if i &lt; j {
+         s[i], s[j] = s[j], s[i]
+      }
+   }
+   // 调整基准的位置
+   s[left], s[i] = s[i], s[left]
+   return i
+}
+</code></pre><p><strong>归并排序</strong><br>
+归并排序是建立在归并操作上的一种有效的排序算法。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为2-路归并。</p>
+<ol>
+<li>把长度为n的输入序列分成两个长度为n/2的子序列；</li>
+<li>对这两个子序列分别采用归并排序；</li>
+<li>将两个排序好的子序列合并成一个最终的排序序列。</li>
+</ol>
+<pre><code>func mergeSort(s []int) {
+   temp := make([]int, len(s))
+   mSort(s, 0, len(s)-1, temp)
+}
+
+func mSort(s []int, left, right int, temp []int) {
+   if left &gt;= right {
+      // 子序列分割完毕
+      return
+   }
+   mid := (left + right) / 2
+   mSort(s, left, mid, temp)
+   mSort(s, mid+1, right, temp)
+   // 两边的子序列都是有序的，只有当
+   // 左边的最大元素大于右边的最小元素
+   // 时才需要合并
+   if s[mid] &gt; s[mid+1] {
+      merge(s, left, mid, right, temp)
+   }
+}
+
+func merge(s []int, left, mid, right int, temp []int) {
+   i := left    // 左子序列初始索引
+   j := mid + 1 // 右子序列初始索引
+   t := 0       // temp的初始索引
+   for i &lt;= mid &amp;&amp; j &lt;= right {
+      if s[i] &lt; s[j] {
+         temp[t] = s[i]
+         i++
+      } else {
+         temp[t] = s[j]
+         j++
+      }
+      t++
+   }
+   // 将左序列剩余元素填充到temp中
+   for i &lt;= mid {
+      temp[t] = s[i]
+      i++
+      t++
+   }
+   // 将右序列剩余元素填充到temp中
+   for j &lt;= right {
+      temp[t] = s[j]
+      j++
+      t++
+   }
+   // 将temp中的元素全部拷贝到原数列中
+   t = 0
+   for left &lt;= right {
+      s[left] = temp[t]
+      left++
+      t++
+   }
+}
+</code></pre><p><strong>堆排序</strong><br>
+堆排序（Heapsort）是指利用堆这种数据结构所设计的一种排序算法。堆积是一个近似完全二叉树的结构，并同时满足堆积的性质：即子结点的键值或索引总是小于（或者大于）它的父节点。</p>
+<ol>
+<li>初始化堆：将R[1..n]构造为堆；</li>
+<li>将当前无序区的堆顶元素R[1]同该区间的最后一个记录交换，然后将新的无序区调整为新的堆。</li>
+</ol>
+<pre><code>func heapSort(s []int) {
+   if len(s) == 0 {
+      return
+   }
+   // 1.构造初始堆
+   // 从最后一个非叶子节点开始，到根节点结束
+   for i := len(s)/2 - 1; i &gt;= 0; i-- {
+      heapAdjust(s, i, len(s)-1)
+   }
+   // 2.开始堆排序
+   for j := len(s) - 1; j &gt;= 0; j-- {
+      s[0], s[j] = s[j], s[0]
+      heapAdjust(s, 0, j-1)
+   }
+}
+
+// 构造大顶堆
+func heapAdjust(s []int, start, end int) {
+   temp := s[start]
+   // 从主节点的左子节点开始,也即从2*start+1开始
+   for k := 2*start + 1; k &lt;= end; k = 2*k + 1 {
+      // 取左右节点值较大的节点的索引
+      if k &lt; end &amp;&amp; s[k] &lt; s[k+1] {
+         k++
+      }
+      // 如果主节点值大于左右节点的值，则调整结束
+      if s[k] &lt;= temp {
+         break
+      }
+      // 更新主节点值
+      s[start] = s[k]
+      // 以左右节点值较大的节点为下一个主节点
+      start = k
+   }
+   s[start] = temp
+}
+</code></pre>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2019/channel/" class="prev" rel="prev" title="Golang Channel"><i class="iconfont icon-left"></i>&nbsp;Golang Channel</a>
+         
+        
+        <a href="http://example.org/2020/captcha/" class="next" rel="next" title="Golang Captcha">Golang Captcha&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

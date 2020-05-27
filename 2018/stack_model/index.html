@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/roc/" />
+  <link rel="next" href="http://example.org/2018/bootstrap/" />
+  <link rel="canonical" href="http://example.org/2018/stack_model/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Stacking Model | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Stacking Model | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Stacking Model",
+    "headline" : "Stacking Model",
+    "description" : "Regression Ensembel by different stack model prediction\nmixed_predition作为最后预测y_true的features\nCode:\nclass Ensemble(object): def __init__(self, n_splits, stacker, base_models): self.n_splits = n_splits self.stacker = stacker self.base_models = base_models def fit_predict(self, X, y, T): X = np.array(X) y = np.array(y) T = np.array(T) folds = list(KFold(n_splits=self.n_splits, shuffle=True, random_state=2016).split(X, y)) S_train = np.zeros((X.shape[0], len(self.base_models))) S_test = np.zeros((T.shape[0], len(self.base_models))) for i, clf in enumerate(self.base_models): S_test_i = np.zeros((T.shape[0], self.n_splits)) for j, (train_idx, test_idx) in enumerate(folds): X_train = X[train_idx] y_train = y[train_idx] X_holdout = X[test_idx] print (\x26quot;Fit Model %d fold %d\x26quot; % (i, j)) clf.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-04-24 10:41:04 \x2b0800 CST",
+    "dateModified" : "2018-04-24 10:41:04 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/stack_model\/",
+    "wordCount" : "144",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Stacking Model</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-04-24 itemprop="datePublished">April 24, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>Regression Ensembel by different stack model prediction</strong></p>
+<p><img src="/media/Stack_Model/1.png" alt="">
+<strong>mixed_predition作为最后预测y_true的features</strong></p>
+<p>Code:</p>
+<pre><code>class Ensemble(object):
+    def __init__(self, n_splits, stacker, base_models):
+        self.n_splits = n_splits
+        self.stacker = stacker
+        self.base_models = base_models
+
+    def fit_predict(self, X, y, T):
+        X = np.array(X)
+        y = np.array(y)
+        T = np.array(T)
+        folds = list(KFold(n_splits=self.n_splits, shuffle=True, random_state=2016).split(X, y))
+        S_train = np.zeros((X.shape[0], len(self.base_models)))
+        S_test = np.zeros((T.shape[0], len(self.base_models)))
+
+        for i, clf in enumerate(self.base_models):
+            S_test_i = np.zeros((T.shape[0], self.n_splits))
+            for j, (train_idx, test_idx) in enumerate(folds):
+                X_train = X[train_idx]
+                y_train = y[train_idx]
+                X_holdout = X[test_idx]
+                print (&quot;Fit Model %d fold %d&quot; % (i, j))
+                clf.fit(X_train, y_train)
+                y_pred = clf.predict(X_holdout)[:]
+        	 #每进入一次循环，相当于上面图中的ModelX预测split的train和它继续预测测试集
+                S_train[test_idx, i] = y_pred
+                S_test_i[:, j] = clf.predict(T)[:]
+            S_test[:, i] = S_test_i.mean(axis=1)
+
+        results = cross_val_score(self.stacker, S_train, y, cv=5, scoring='mean_squared_error')
+
+        print(&quot;Stacker score: %.4f (%.4f)&quot; % (results.mean(), results.std()))
+
+        self.stacker.fit(S_train, y)
+        res = self.stacker.predict(S_test)[:]
+        return res
+</code></pre><p>⚠️融合的基算法分裂方式最好不同，树形算法中，混合boosting &amp; bagging的效果最好。<br>
+预测代码：</p>
+<pre><code>stack = Ensemble(n_splits=5,
+        stacker=LinearRegression(),
+        base_models=(xgb_model, lgb_model, et_model, gbr_model, ada_model, dt_model))
+
+y_pred = stack.fit_predict(train_x, y, test_y)</code></pre>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/roc/" class="prev" rel="prev" title="ROC &amp; AUC"><i class="iconfont icon-left"></i>&nbsp;ROC &amp; AUC</a>
+         
+        
+        <a href="http://example.org/2018/bootstrap/" class="next" rel="next" title="Bootstrap">Bootstrap&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2019/goroutine/" />
+  <link rel="next" href="http://example.org/2020/sort/" />
+  <link rel="canonical" href="http://example.org/2019/channel/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Golang Channel | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Golang Channel | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Golang Channel",
+    "headline" : "Golang Channel",
+    "description" : "不要通过共享内存的方式进行通信，而是应该通过通信的方式共享内存\nGo 语言提供了一种不同的并发模型，也就是通信顺序进程（Communicating sequential processes，CSP） Goroutine 和 Channel 分别对应 CSP 中的实体和传递信息的媒介，Goroutine 会通过 Channel 传递数据。\nchannel 收发操作均遵循了先入先出（FIFO）的设计，具体规则如下：\n 先从 Channel 读取数据的 Goroutine 会先接收到数据； 先向 Channel 发送数据的 Goroutine 会得到先发送数据的权利；  channel的结构体\ntype hchan struct { qcount uint \/\/ Channel 中的元素个数 dataqsiz uint \/\/ Channel 中的循环队列的长度 buf unsafe.Pointer \/\/ Channel 的缓冲区数据指针 elemsize uint16 \/\/ Channel能够收发的元素类型 closed uint32 elemtype *_type \/\/ Channel能够收发的元素大小 sendx uint \/\/ Channel 的发送操作处理到的位置 recvx uint \/\/ Channel 的接收操作处理到的位置 recvq waitq \/\/ 双向链表，存储由于缓冲区空间不足而阻塞的goroutine列表 sendq waitq \/\/ 双向链表，存储由于缓冲区空间不足而阻塞的goroutine列表 lock mutex } 发送数据",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-10-23 11:46:41 \x2b0800 CST",
+    "dateModified" : "2019-10-23 11:46:41 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2019\/channel\/",
+    "wordCount" : "107",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Golang Channel</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2019-10-23 itemprop="datePublished">October 23, 2019</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><em><strong>不要通过共享内存的方式进行通信，而是应该通过通信的方式共享内存</strong></em><br>
+<img src="/media/channel/1.png" alt=""></p>
+<p><img src="/media/channel/2.png" alt=""></p>
+<p><strong>Go 语言提供了一种不同的并发模型，也就是通信顺序进程（Communicating sequential processes，CSP）
+Goroutine 和 Channel 分别对应 CSP 中的实体和传递信息的媒介，Goroutine 会通过 Channel 传递数据。</strong></p>
+<p><strong>channel 收发操作均遵循了先入先出（FIFO）的设计，具体规则如下：</strong></p>
+<ul>
+<li>先从 Channel 读取数据的 Goroutine 会先接收到数据；</li>
+<li>先向 Channel 发送数据的 Goroutine 会得到先发送数据的权利；</li>
+</ul>
+<br>
+<p>channel的结构体</p>
+<pre><code>type hchan struct {
+        qcount   uint   // Channel 中的元素个数 
+        dataqsiz uint   // Channel 中的循环队列的长度
+        buf      unsafe.Pointer // Channel 的缓冲区数据指针
+        elemsize uint16 // Channel能够收发的元素类型
+        closed   uint32
+        elemtype *_type // Channel能够收发的元素大小
+        sendx    uint   // Channel 的发送操作处理到的位置
+        recvx    uint   // Channel 的接收操作处理到的位置
+        recvq    waitq // 双向链表，存储由于缓冲区空间不足而阻塞的goroutine列表
+        sendq    waitq // 双向链表，存储由于缓冲区空间不足而阻塞的goroutine列表
+
+        lock mutex
+}
+</code></pre><p><strong>发送数据</strong><br>
+使用ch &lt;- i语句向 channel 发送数据，在发送数据的逻辑执行之前会先为当前channel加锁，防止发生竞争条件。</p>
+<ol>
+<li>直接发送：目标 channel 没有被关闭并且已经有处于读等待的goroutine，那么runtime.chansend函数会从接收队列recvq中取出最先陷入等待的goroutine并直接向它发送数据，runtime.chansend函数的执行可以分成两个部分。</li>
+<li>缓冲区：创建的channel包含缓冲区并且 channel 中的数据没有装满，会先使用 chanbuf 计算出下一个可以存储数据的位置，然后通过runtime.typedmemmove将发送的数据拷贝到缓冲区中并增加sendx索引和qcount计数器。</li>
+<li>阻塞发送：当channel没有接收者能够处理数据时，向channel发送数据就会被下游阻塞。</li>
+</ol>
+<br>
+<p><strong>接收数据</strong></p>
+<ol>
+<li>直接接收：当channel的sendq队列中包含处于等待状态的 goroutine 时，该函数会取出队列头等待的 goroutine，处理的逻辑和发送时相差无几，只是发送数据时调用的是 runtime.send 函数，而接收数据时使用 runtime.recv 函数</li>
+<li>缓冲区：当缓冲区存在数据时，从channel中接收数据会直接从缓冲区中recvx的索引位置中取出数据进行处理。如果接收数据的内存地址不为空，那么就会直接使用 runtime.typedmemmove 将缓冲区中的数据拷贝到内存中、清除队列中的数据并完成收尾工作。</li>
+<li>阻塞接收：当channel的发送队列中不存在等待的goroutine并且缓冲区中也不存在任何数据时，从管道中接收数据的操作会变成阻塞操作。在正常的接收场景中，使用 runtime.sudog 结构体将当前goroutine包装成一个处于等待状态的goroutine并将其加入到接收队列中。完成入队之后，调用runtime.goparkunlock函数立刻触发goroutine的调度，让出处理器的使用权并等待调度器的调度。</li>
+</ol>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2019/goroutine/" class="prev" rel="prev" title="Golang Goroutine"><i class="iconfont icon-left"></i>&nbsp;Golang Goroutine</a>
+         
+        
+        <a href="http://example.org/2020/sort/" class="next" rel="next" title="Golang Sort">Golang Sort&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

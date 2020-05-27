@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/rcnn/" />
+  <link rel="next" href="http://example.org/2018/graphviz/" />
+  <link rel="canonical" href="http://example.org/2018/yolo/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           YOLO | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="YOLO | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "YOLO",
+    "headline" : "YOLO",
+    "description" : "YOLOV1\nYOLO的思想：将整张图片作为输入，直接在输出层回归bounding box的位置及其所属类别\n和RCNN、faster-RCNN的不同：这两者也是将整张图片作为输入，但是faster-RCNN采用RCNN的proposal\x2bclassifier思想。将提取proposal的步骤放在CNN中，而yolo则采用直接回归的思想\n实现方法：\n 将image分成S*S个grid cell，如果某个object的中心落在grid cell中，则由这个grid cell负责预测该object 每个grid cell负责预测B个bounding box，每个bounding box除了要回归自身的位置和大小外，还需要预测一个confidence 这个confidence代表了所预测的box中含有object的置信度和这个box预测的有多准，每个bounding box 要预测(x,y,w,h)和confidence。每个grid cell要预测一个类别信息，记为C类。则S*S个grid cell，每个grid要预测B个bounding box和C个类别，输出就是：S * S *（5 * B \x2b C)的tensor 在test时，每个grid cell预测的class信息和bounding box预测的confidence相乘，得到的每个class-specific confidence score之后，设置阈值，滤掉得分低的boxes，对保留的boxes进行NMS处理，就得到最终结果  缺点：\n 输出层为全连接层，在检测时，YOLO训练模型只支持与训练图像相同的输入分辨率 虽然每个grid cell可以预测B个bounding box，但最终只选择IOU最高的bounding box作为检测输出，即每个grid最多只预测一个物体   YOLOV2改进\n 使用BN，提高网络收敛性，对每一个卷卷积层增加BN。BN就是把隐层神经元激活输入拉回到均值为0，方差为1的正太分布。经过BN后，目前大部分Activation的值落入非线性函数的线性区间内，其对应的导数远离导数饱和区，这样来加速训练收敛过程。 YOLOv1有全连接，从而只能直接预测bounding box的坐标值。Faster-RCNN的方法只用卷积层与Region proposal Network来预测anchor box偏移值与置信度，而不直接预测坐标值。发现通过预测偏移值而非坐标值能够简化问题。去掉全连接。使用Anchor box来预测bounding box Anchor box，在训练集的bounding box跑一下k-means聚类，找到一个较好的值 更精细度的特征，加上passthrough layer来取得之前某个26 * 26分辨率特征，把高分辨率和低分辨率特征联系在一起 多尺度训练，yolov2每迭代几次都会改变网络参数，每10个batch，网络随机选择新图片尺寸   YOLOV3改进\n 多尺度预测，每种尺度预测3个box，anchor依然使用聚类，得到9个聚类中心，将其按大小均分给3个尺度 尺度1：在基础网络之后添加一些卷积层再输出box信息 尺度2：从尺度1中的倒数第二层卷积层上采样再与最后一个16*16大小特征图相加，再次通过多个卷积后输出box信息，相比尺度1变大两倍 尺度3：与尺度2类似，使用3232大小特征图 更好的基础网络，resnet和分类器darknet 53。 分类器-类别预测，yolov3不使用softmax分类，因为softmax使得每个框只能识别一个类别，而用多个logstic分类器替代softmax准确率不会下降，分类损失采用binary cross-entropy loss。  ",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-08-17 17:09:18 \x2b0800 CST",
+    "dateModified" : "2018-08-17 17:09:18 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/yolo\/",
+    "wordCount" : "64",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">YOLO</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-08-17 itemprop="datePublished">August 17, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>YOLOV1</strong><br>
+YOLO的思想：将整张图片作为输入，直接在输出层回归bounding box的位置及其所属类别</p>
+<p>和RCNN、faster-RCNN的不同：这两者也是将整张图片作为输入，但是faster-RCNN采用RCNN的proposal+classifier思想。将提取proposal的步骤放在CNN中，而yolo则采用直接回归的思想</p>
+<p>实现方法：</p>
+<ol>
+<li>将image分成S*S个grid cell，如果某个object的中心落在grid cell中，则由这个grid cell负责预测该object</li>
+<li>每个grid cell负责预测B个bounding box，每个bounding box除了要回归自身的位置和大小外，还需要预测一个confidence</li>
+<li>这个confidence代表了所预测的box中含有object的置信度和这个box预测的有多准，每个bounding box 要预测(x,y,w,h)和confidence。每个grid cell要预测一个类别信息，记为C类。则S*S个grid cell，每个grid要预测B个bounding box和C个类别，输出就是：S * S *（5 * B + C)的tensor</li>
+<li>在test时，每个grid cell预测的class信息和bounding box预测的confidence相乘，得到的每个class-specific confidence score之后，设置阈值，滤掉得分低的boxes，对保留的boxes进行NMS处理，就得到最终结果</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>输出层为全连接层，在检测时，YOLO训练模型只支持与训练图像相同的输入分辨率</li>
+<li>虽然每个grid cell可以预测B个bounding box，但最终只选择IOU最高的bounding box作为检测输出，即每个grid最多只预测一个物体
+<img src="/media/yolo/1.png" alt=""><br></li>
+</ol>
+<p><strong>YOLOV2改进</strong></p>
+<ol>
+<li>使用BN，提高网络收敛性，对每一个卷卷积层增加BN。BN就是把隐层神经元激活输入拉回到均值为0，方差为1的正太分布。经过BN后，目前大部分Activation的值落入非线性函数的线性区间内，其对应的导数远离导数饱和区，这样来加速训练收敛过程。</li>
+<li>YOLOv1有全连接，从而只能直接预测bounding box的坐标值。Faster-RCNN的方法只用卷积层与Region proposal Network来预测anchor box偏移值与置信度，而不直接预测坐标值。发现通过预测偏移值而非坐标值能够简化问题。去掉全连接。使用Anchor box来预测bounding box</li>
+<li>Anchor box，在训练集的bounding box跑一下k-means聚类，找到一个较好的值</li>
+<li>更精细度的特征，加上passthrough layer来取得之前某个26 * 26分辨率特征，把高分辨率和低分辨率特征联系在一起</li>
+<li>多尺度训练，yolov2每迭代几次都会改变网络参数，每10个batch，网络随机选择新图片尺寸
+<img src="/media/yolo/2.png" alt=""><br></li>
+</ol>
+<p><strong>YOLOV3改进</strong></p>
+<ol>
+<li>多尺度预测，每种尺度预测3个box，anchor依然使用聚类，得到9个聚类中心，将其按大小均分给3个尺度
+尺度1：在基础网络之后添加一些卷积层再输出box信息
+尺度2：从尺度1中的倒数第二层卷积层上采样再与最后一个16*16大小特征图相加，再次通过多个卷积后输出box信息，相比尺度1变大两倍
+尺度3：与尺度2类似，使用3232大小特征图</li>
+<li>更好的基础网络，resnet和分类器darknet 53。</li>
+<li>分类器-类别预测，yolov3不使用softmax分类，因为softmax使得每个框只能识别一个类别，而用多个logstic分类器替代softmax准确率不会下降，分类损失采用binary cross-entropy loss。</li>
+</ol>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/rcnn/" class="prev" rel="prev" title="RCNN"><i class="iconfont icon-left"></i>&nbsp;RCNN</a>
+         
+        
+        <a href="http://example.org/2018/graphviz/" class="next" rel="next" title="Graphviz">Graphviz&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

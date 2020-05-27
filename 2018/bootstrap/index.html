@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/stack_model/" />
+  <link rel="next" href="http://example.org/2018/wordcloud/" />
+  <link rel="canonical" href="http://example.org/2018/bootstrap/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Bootstrap | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Bootstrap | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Bootstrap",
+    "headline" : "Bootstrap",
+    "description" : "Bootstrap是一类非参数Monte Carlo方法，其实质是对观测信息进行再抽样，进而对总体的分布特性进行统计推断。\nBootstrap通过重抽样，可以避免了Cross-Validation造成的样本减少问题，其次，Bootstrap也可以用于创造数据的随机性。比如，我们所熟知的随机森林算法第一步就是从原始训练数据集中，应用bootstrap方法有放回地随机抽取k个新的自助样本集，并由此构建k棵分类回归树。\n假设有两个金融资产X和Y，现在想要合理配置这两个资产，如何使得其资产组合的风险最小？这个问题几十年前马尔可维茨已经在其投资组合理论里给出了解答，最优解表达式如下：\n$$ \\begin{equation} \\begin{split} \\ \\alpha \x26amp;= \\frac{\\sigma^2_Y-\\sigma_{XY}}{\\sigma^2_X \x2b \\sigma^2_Y - 2\\sigma_{XY}} \\\n\\end{split} \\tag{1} \\end{equation} $$\n其中 $$ \\begin{equation} \\begin{split} \\ \\sigma^2_X \x26amp;= Var(X),\\sigma^2_Y=Var(Y), \\sigma_{XY}=Cov(X, Y) \\\n\\end{split} \\tag{2} \\end{equation} $$ 但是现实生活中实际上并不知道X\x26amp;Y的方差以及XY的协方差，故而只能通过X和Y的一系列样本对其进行估计。 自从有了Bootstrap之后，可以更好地去做估计总体的分布特性。\nBootstrap步骤：\n  在原有的样本中通过重抽样抽取一定数量（比如100）的新样本，重抽样（Re-sample）的意思就是有放回的抽取，即一个数据有可以被重复抽取超过一次。\n  基于产生的新样本，计算需要估计的统计量。\n  重复上述步骤n次（一般是n\x26gt;1000次）\n  计算被估计量的均值和方差\n  通过Bootstrap方法还可以估计accuracy，也就是其Standard Error。这是利用原有样本进行一次估计所做不到的。\n不仅是的标准差，如果想要估计的中位数、分位数等统计量，也是可以通过Boostrap方法做到的，其整个流程可以用下面一张图诠释： 本质上，Bootstrap方法，是将一次的估计过程，重复上千次上万次，从而便得到了得到上千个甚至上万个的估计值，利用这不止一次的估计值，就可以估计均值以外的其他统计量：比如标准差、中位数等。",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-05-03 14:48:36 \x2b0800 CST",
+    "dateModified" : "2018-05-03 14:48:36 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/bootstrap\/",
+    "wordCount" : "46",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Bootstrap</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-05-03 itemprop="datePublished">May 3, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>Bootstrap是一类非参数Monte Carlo方法，其实质是对观测信息进行再抽样，进而对总体的分布特性进行统计推断。</p>
+<p>Bootstrap通过重抽样，可以避免了Cross-Validation造成的样本减少问题，其次，Bootstrap也可以用于创造数据的随机性。比如，我们所熟知的随机森林算法第一步就是从原始训练数据集中，应用bootstrap方法有放回地随机抽取k个新的自助样本集，并由此构建k棵分类回归树。</p>
+<p>假设有两个金融资产X和Y，现在想要合理配置这两个资产，如何使得其资产组合的风险最小？这个问题几十年前马尔可维茨已经在其投资组合理论里给出了解答，最优解表达式如下：</p>
+<p>$$
+\begin{equation}
+\begin{split}
+\ \alpha &amp;= \frac{\sigma^2_Y-\sigma_{XY}}{\sigma^2_X + \sigma^2_Y - 2\sigma_{XY}} \<br>
+\end{split} \tag{1}
+\end{equation}
+$$</p>
+<p>其中
+$$
+\begin{equation}
+\begin{split}
+\ \sigma^2_X &amp;= Var(X),\sigma^2_Y=Var(Y), \sigma_{XY}=Cov(X, Y) \<br>
+\end{split} \tag{2}
+\end{equation}
+$$
+但是现实生活中实际上并不知道X&amp;Y的方差以及XY的协方差，故而只能通过X和Y的一系列样本对其进行估计。
+自从有了Bootstrap之后，可以更好地去做估计总体的分布特性。</p>
+<p><strong>Bootstrap步骤：</strong></p>
+<ol>
+<li>
+<p><strong>在原有的样本中通过重抽样抽取一定数量（比如100）的新样本，重抽样（Re-sample）的意思就是有放回的抽取，即一个数据有可以被重复抽取超过一次。</strong></p>
+</li>
+<li>
+<p><strong>基于产生的新样本，计算需要估计的统计量。</strong></p>
+</li>
+<li>
+<p><strong>重复上述步骤n次（一般是n&gt;1000次）</strong></p>
+</li>
+<li>
+<p><strong>计算被估计量的均值和方差</strong></p>
+</li>
+</ol>
+<p>通过Bootstrap方法还可以估计accuracy，也就是其Standard Error。这是利用原有样本进行一次估计所做不到的。</p>
+<p>不仅是的标准差，如果想要估计的中位数、分位数等统计量，也是可以通过Boostrap方法做到的，其整个流程可以用下面一张图诠释：
+<img src="/media/bootstrap/1.png" alt=""></p>
+<p>本质上，Bootstrap方法，是将一次的估计过程，重复上千次上万次，从而便得到了得到上千个甚至上万个的估计值，利用这不止一次的估计值，就可以估计均值以外的其他统计量：比如标准差、中位数等。</p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/stack_model/" class="prev" rel="prev" title="Stacking Model"><i class="iconfont icon-left"></i>&nbsp;Stacking Model</a>
+         
+        
+        <a href="http://example.org/2018/wordcloud/" class="next" rel="next" title="Wordcloud">Wordcloud&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/adaboost/" />
+  <link rel="next" href="http://example.org/2018/roc/" />
+  <link rel="canonical" href="http://example.org/2018/heatmap/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Heatmap | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Heatmap | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Heatmap",
+    "headline" : "Heatmap",
+    "description" : "皮尔逊系数与特征重要性的关系 colormap = plt.cm.RdBu plt.figure(figsize = (14, 12)) plt.title(\x27heatmap\x27, y=1.05, size=15) sns.heatmap(train.astype(float).corr(), linewidths=0.1, vmax=1.0, square=True, cmap=colormap, linecolor=\x27white\x27, fmt=\x27.2f\x27, annot=True) linewidth：每个值之间的间距。\nfmt：在作图过程中保留的小数位（对原始数据无伤害）\nlinecolor：每个格子之间的线颜色\nannot：是否显示格子上的数值\n下三角heatmap：\ncorr = np.round(train_df.corr(), 3) mask = np.zeros_like(corr, dtype=np.bool) mask[np.triu_indices_from(mask)] = True sns.set(style=\x26quot;white\x26quot;) f, ax = plt.subplots(figsize=(10, 9)) cmap = sns.diverging_palette(30, 10, as_cmap=True) #这两个差距尽可能的大，因为如果太相近的话，正负极限的时候颜色差不多 sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0, square=True, linewidths=.1, annot=True, cbar_kws={\x26quot;shrink\x26quot;: .5})  Update（提取对结果可能重要的部分特征）\n# most correlated features corrmat = train.corr() top_corr_features = corrmat.index[abs(corrmat[\x26quot;SalePrice\x26quot;]) \x26gt; 0.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-03-27 20:13:19 \x2b0800 CST",
+    "dateModified" : "2018-03-27 20:13:19 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/heatmap\/",
+    "wordCount" : "104",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Heatmap</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-03-27 itemprop="datePublished">March 27, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>皮尔逊系数与特征重要性的关系</strong>
+<img src="/media/heatmap/1.png" alt=""></p>
+<pre><code>colormap = plt.cm.RdBu
+plt.figure(figsize = (14, 12))
+plt.title('heatmap', y=1.05, size=15)
+
+sns.heatmap(train.astype(float).corr(), linewidths=0.1, vmax=1.0, square=True, cmap=colormap, linecolor='white', fmt='.2f', annot=True)
+</code></pre><p>linewidth：每个值之间的间距。<br>
+fmt：在作图过程中保留的小数位（对原始数据无伤害）<br>
+linecolor：每个格子之间的线颜色<br>
+annot：是否显示格子上的数值<br>
+<br></p>
+<p>下三角heatmap：</p>
+<pre><code>corr = np.round(train_df.corr(), 3)
+mask = np.zeros_like(corr, dtype=np.bool)
+mask[np.triu_indices_from(mask)] = True
+sns.set(style=&quot;white&quot;)
+
+f, ax = plt.subplots(figsize=(10, 9))
+
+cmap = sns.diverging_palette(30, 10, as_cmap=True)  #这两个差距尽可能的大，因为如果太相近的话，正负极限的时候颜色差不多
+
+sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0, square=True, linewidths=.1, annot=True, cbar_kws={&quot;shrink&quot;: .5})
+</code></pre><p><img src="/media/heatmap/2.png" alt=""></p>
+<hr>
+<p>Update（提取对结果可能重要的部分特征）</p>
+<pre><code># most correlated features
+corrmat = train.corr()
+top_corr_features = corrmat.index[abs(corrmat[&quot;SalePrice&quot;]) &gt; 0.5]
+
+plt.figure(figsize=(10,10))
+g = sns.heatmap(train[top_corr_features].corr(),annot=True,cmap=&quot;RdYlGn&quot;)
+</code></pre><p><img src="/media/heatmap/3.png" alt=""></p>
+<hr>
+<p>Update（可以通过corr的value设置颜色）</p>
+<pre><code>corrmat = data_train.corr()
+# 分成10个颜色区间
+k = 10
+cols = corrmat.nlargest(k, 'SalePrice')['SalePrice'].index
+cm = np.corrcoef(data_train[cols].values.T)
+sns.set(font_scale=1.25)
+hm = sns.heatmap(cm, cbar=True, annot=True, \
+                 square=True, fmt='.2f', annot_kws={'size': 10}, yticklabels=cols.values, xticklabels=cols.values)
+
+plt.show()
+</code></pre><p><img src="/media/heatmap/4.png" alt=""></p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/adaboost/" class="prev" rel="prev" title="Adaboost"><i class="iconfont icon-left"></i>&nbsp;Adaboost</a>
+         
+        
+        <a href="http://example.org/2018/roc/" class="next" rel="next" title="ROC &amp; AUC">ROC &amp; AUC&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

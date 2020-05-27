@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/yolo/" />
+  <link rel="next" href="http://example.org/2018/receptive/" />
+  <link rel="canonical" href="http://example.org/2018/graphviz/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Graphviz | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Graphviz | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Graphviz",
+    "headline" : "Graphviz",
+    "description" : "个性化实验预测的可视化，需要对训练过程中树的生长进行可视化。\n准备工具：\n Graphviz desktop-version Graphviz pydotplus  from sklearn import tree from subprocess import check_call from PIL import Image, ImageDraw, ImageFont from IPython.display import Image as PImage decision_tree = tree.DecisionTreeRegressor(max_depth = 3) decision_tree.fit(train_df, yt) # Export our trained model as a .dot file with open(\x26quot;tree1.dot\x26quot;, \x27w\x27) as f: f = tree.export_graphviz(decision_tree, #训练完的model out_file=f, #输出的路径 max_depth = 4, #只要四层 impurity = False, feature_names = train_df.columns.values, class_names = [\x27No\x27, \x27Yes\x27], rounded = True, filled= True ) #Convert .",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-09-30 00:38:09 \x2b0800 CST",
+    "dateModified" : "2018-09-30 00:38:09 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/graphviz\/",
+    "wordCount" : "98",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Graphviz</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-09-30 itemprop="datePublished">September 30, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>个性化实验预测的可视化，需要对训练过程中树的生长进行可视化。</strong><br>
+准备工具：</p>
+<ul>
+<li>Graphviz desktop-version</li>
+<li>Graphviz pydotplus</li>
+</ul>
+<pre><code>from sklearn import tree
+from subprocess import check_call
+from PIL import Image, ImageDraw, ImageFont
+from IPython.display import Image as PImage
+
+decision_tree = tree.DecisionTreeRegressor(max_depth = 3)
+decision_tree.fit(train_df, yt)
+
+# Export our trained model as a .dot file
+with open(&quot;tree1.dot&quot;, 'w') as f:
+     f = tree.export_graphviz(decision_tree,    #训练完的model
+                              out_file=f,    #输出的路径
+                              max_depth = 4,    #只要四层
+                              impurity = False,
+                              feature_names = train_df.columns.values,
+                              class_names = ['No', 'Yes'],
+                              rounded = True,
+                              filled= True )
+
+#Convert .dot to .png to allow display in web notebook
+check_call(['dot','-Tpng','tree1.dot','-o','tree1.png'])
+
+# Annotating chart with PIL
+#Image是读取出的图片的方法，将图片数据变成矩阵
+img = Image.open(&quot;tree1.png&quot;) 
+draw = ImageDraw.Draw(img)
+img.save('sample-out.png')
+PImage(&quot;sample-out.png&quot;,)   
+</code></pre><p><img src="/media/graphviz/1.png" alt=""></p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/yolo/" class="prev" rel="prev" title="YOLO"><i class="iconfont icon-left"></i>&nbsp;YOLO</a>
+         
+        
+        <a href="http://example.org/2018/receptive/" class="next" rel="next" title="Receptive Field">Receptive Field&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

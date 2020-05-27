@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2019/sessionsync/" />
+  <link rel="next" href="http://example.org/2019/channel/" />
+  <link rel="canonical" href="http://example.org/2019/goroutine/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Golang Goroutine | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Golang Goroutine | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Golang Goroutine",
+    "headline" : "Golang Goroutine",
+    "description" : "groutine能拥有强大的并发实现是通过GPM调度模型实现\nGo 语言的调度器通过使用与 CPU 数量相等的线程减少线程频繁切换的内存开销，同时在每一个线程上执行额外开销更低的 Goroutine 来降低操作系统和硬件的负载。\nGo 语言中的线程 M、处理器 P 和 Goroutine 的关系： G\nGorotuine，Go 语言调度器中待执行的任务，它运行时在调度器中的地位与线程在操作系统中差不多，但是它占用了更小的内存空间，也降低了上下文切换的开销。是 Go 语言在用户态提供的线程，作为一种粒度更细的资源调度单元，如果使用得当能够在高并发的场景下更高效地利用机器的CPU。\nGoroutine常见状态:\n waiting：Goroutine 正在等待某些条件满足 runnable：Goroutine 已经准备就绪，可以在线程运行 running：Goroutine 正在某个线程上运行  Goroutine的状态迁移\nM\n操作系统线程。调度器最多可以创建 10000 个线程，但是其中大多数的线程都不会执行用户代码（可能陷入系统调用），最多只会有 GOMAXPROCS 个活跃线程能够正常运行。 P\n处理器P是线程和Goroutine 的中间层，它能提供线程需要的上下文环境，也会负责调度线程上的等待队列，通过处理器 P 的调度，每一个内核线程都能够执行多个 Goroutine，它能在 Goroutine 进行一些 I\/O 操作时及时切换，提高线程的利用率。P的数量可以通过GOMAXPROCS( )来设置，它其实也就代表了真正的并发度，即有多少个goroutine可以同时运行。 每一个物理线程M都拥有一个处理器P，每一个P也都有一个正在运行的goroutine。P维护着正在等待被调度的runnable就绪态的goroutine队列。 当一个OS线程陷入阻塞，P会转而在其他线程中运行。阻塞结束后的线程会尝试获取P运行goroutine，如果没法获取，则把goroutine放在global runqueue中。所有的P也会周期性的检查global runqueue并运行其中的goroutine，否则global runqueue上的goroutine永远无法执行。\n若P所分配的任务G很快就执行完成，则会从其他P中拿取一些G来执行，一般会直接拿runqueue中的一半，确保了每个OS线程都能充分的使用。",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-08-15 11:46:48 \x2b0800 CST",
+    "dateModified" : "2019-08-15 11:46:48 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2019\/goroutine\/",
+    "wordCount" : "50",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Golang Goroutine</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2019-08-15 itemprop="datePublished">August 15, 2019</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>groutine能拥有强大的并发实现是通过GPM调度模型实现</strong></p>
+<p><strong>Go 语言的调度器通过使用与 CPU 数量相等的线程减少线程频繁切换的内存开销，同时在每一个线程上执行额外开销更低的 Goroutine 来降低操作系统和硬件的负载。</strong></p>
+<p><strong>Go 语言中的线程 M、处理器 P 和 Goroutine 的关系：</strong>
+<img src="/media/goroutine/1.png" alt=""></p>
+<br>
+<p><em><strong>G</strong></em><br>
+Gorotuine，Go 语言调度器中待执行的任务，它运行时在调度器中的地位与线程在操作系统中差不多，但是它占用了更小的内存空间，也降低了上下文切换的开销。是 Go 语言在用户态提供的线程，作为一种粒度更细的资源调度单元，如果使用得当能够在高并发的场景下更高效地利用机器的CPU。</p>
+<p>Goroutine常见状态:</p>
+<ol>
+<li>waiting：Goroutine 正在等待某些条件满足</li>
+<li>runnable：Goroutine 已经准备就绪，可以在线程运行</li>
+<li>running：Goroutine 正在某个线程上运行</li>
+</ol>
+<p><img src="/media/goroutine/2.png" alt=""></p>
+<br>
+<p><strong>Goroutine的状态迁移</strong></p>
+<p><img src="/media/goroutine/3.png" alt=""></p>
+<br>
+<p><em><strong>M</strong></em></p>
+<p>操作系统线程。调度器最多可以创建 10000 个线程，但是其中大多数的线程都不会执行用户代码（可能陷入系统调用），最多只会有 GOMAXPROCS 个活跃线程能够正常运行。
+<img src="/media/goroutine/4.png" alt=""></p>
+<br>
+<p><em><strong>P</strong></em><br>
+处理器P是线程和Goroutine 的中间层，它能提供线程需要的上下文环境，也会负责调度线程上的等待队列，通过处理器 P 的调度，每一个内核线程都能够执行多个 Goroutine，它能在 Goroutine 进行一些 I/O 操作时及时切换，提高线程的利用率。P的数量可以通过GOMAXPROCS( )来设置，它其实也就代表了真正的并发度，即有多少个goroutine可以同时运行。
+<img src="/media/goroutine/5.png" alt=""></p>
+<br>
+每一个物理线程M都拥有一个处理器P，每一个P也都有一个正在运行的goroutine。P维护着正在等待被调度的runnable就绪态的goroutine队列。  
+<p>当一个OS线程陷入阻塞，P会转而在其他线程中运行。阻塞结束后的线程会尝试获取P运行goroutine，如果没法获取，则把goroutine放在global runqueue中。所有的P也会周期性的检查global runqueue并运行其中的goroutine，否则global runqueue上的goroutine永远无法执行。</p>
+<p>若P所分配的任务G很快就执行完成，则会从其他P中拿取一些G来执行，一般会直接拿runqueue中的一半，确保了每个OS线程都能充分的使用。</p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2019/sessionsync/" class="prev" rel="prev" title="Golang SessionSynchronization"><i class="iconfont icon-left"></i>&nbsp;Golang SessionSynchronization</a>
+         
+        
+        <a href="http://example.org/2019/channel/" class="next" rel="next" title="Golang Channel">Golang Channel&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2019/beegocontrol/" />
+  <link rel="next" href="http://example.org/2019/redis/" />
+  <link rel="canonical" href="http://example.org/2019/beegoview/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Golang View | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Golang View | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Golang View",
+    "headline" : "Golang View",
+    "description" : "View可以实现web展示和用户交互功能，在视图中其实没有真正的处理发生，它只是作为一种输出数据并允许用户操纵的方式。go 统一使用了 {{ 和 }} 作为左右标签，没有其他的标签符号。\n 使用 . 访问当前位置的上下文 使用 $ 引用当前模板根级的上下文 使用 $var 访问创建的变量  循环 range … end。\n\x26lt;!-- Slice --\x26gt; {{range .ContNumAll}} \x26lt;option value=\x26quot;{{.contnum}}\x26quot;\x26gt;{{.contnum}}\x26lt;\/option\x26gt; {{end}} \x26lt;!-- Map --\x26gt; {{range $ind, $elem := .DeviceBrandMap}} \x26lt;option value=\x26quot;{{$elem.Name}}\x26quot;\x26gt;{{$elem.Name}}\x26lt;\/option\x26gt; {{end}} 判断 if \x26hellip; else \x26hellip; end\n{{if .IsHomePage}} {{else}} {{if .IsPayed}}{{end}} {{end}} {{if .IsHome}} {{else if .IsAbout}} {{else}} {{end}} 比较 eq = \/ ne != \/ lt \x26lt; \/ le \x26lt;= \/ gt \x26gt;\/ ge \x26gt;=",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-05-23 11:28:22 \x2b0800 CST",
+    "dateModified" : "2019-05-23 11:28:22 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2019\/beegoview\/",
+    "wordCount" : "94",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Golang View</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2019-05-23 itemprop="datePublished">May 23, 2019</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>View可以实现web展示和用户交互功能，在视图中其实没有真正的处理发生，它只是作为一种输出数据并允许用户操纵的方式。go 统一使用了 {{ 和 }} 作为左右标签，没有其他的标签符号。</strong></p>
+<ul>
+<li>使用 . 访问当前位置的上下文</li>
+<li>使用 $ 引用当前模板根级的上下文</li>
+<li>使用 $var 访问创建的变量</li>
+</ul>
+<p><strong>循环 range … end</strong>。</p>
+<pre><code>&lt;!-- Slice --&gt;
+{{range .ContNumAll}}
+&lt;option value=&quot;{{.contnum}}&quot;&gt;{{.contnum}}&lt;/option&gt;
+{{end}}
+
+&lt;!-- Map --&gt;
+{{range $ind, $elem := .DeviceBrandMap}}
+&lt;option value=&quot;{{$elem.Name}}&quot;&gt;{{$elem.Name}}&lt;/option&gt;
+{{end}}
+</code></pre><p><strong>判断 if &hellip; else &hellip; end</strong></p>
+<pre><code>{{if .IsHomePage}}
+{{else}}
+    {{if .IsPayed}}{{end}}
+{{end}}
+
+{{if .IsHome}}
+{{else if .IsAbout}}
+{{else}}
+{{end}}
+</code></pre><p><strong>比较 eq = / ne != / lt &lt; / le &lt;= / gt &gt;/ ge &gt;=</strong></p>
+<pre><code>{{if eq .sort 0}}
+// your function
+{{else if eq .name &quot;Zhangsan&quot;}}
+// your function
+{{else}}
+// your function
+{{end}}
+</code></pre>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2019/beegocontrol/" class="prev" rel="prev" title="Golang Controller"><i class="iconfont icon-left"></i>&nbsp;Golang Controller</a>
+         
+        
+        <a href="http://example.org/2019/redis/" class="next" rel="next" title="Golang Redis">Golang Redis&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

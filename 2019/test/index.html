@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2019/oop/" />
+  <link rel="next" href="http://example.org/2019/reflect/" />
+  <link rel="canonical" href="http://example.org/2019/test/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Golang Test &amp; Benchmark | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Golang Test &amp; Benchmark | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Golang Test \x26 Benchmark",
+    "headline" : "Golang Test \x26 Benchmark",
+    "description" : "Go语言中的测试依赖go test命令。编写测试代码和编写普通的Go代码过程是类似的，并不需要学习新的语法、规则或工具。\ngo test命令是一个按照一定约定和组织的测试代码的驱动程序。在包目录内，所有以_test.go为后缀名的源代码文件都是go test测试的一部分，不会被go build编译到最终的可执行文件中。\nmethod.go\nfunc AddFunction(a, b int) int { return a \x2b b } method_test.go\nfunc TestAdd(t *testing.T) { res := AddFunction(1, 2) if res == 3 { t.Log(\x26quot;Ok\x26quot;) } else { t.Fatal(\x26quot;Error\x26quot;) } } 在终端相应的目录中运行 go test -v\n% go test -v === RUN TestAdd --- PASS: TestAdd (0.00s) method_test.go:26: Ok PASS ok example\/fortest 0.007s \n基准测试主要是通过测试CPU和内存的效率问题，来评估被测试代码的性能，进而找到更好的解决方案。\nbench_test.go\nfunc BenchmarkSprintf(b *testing.B){ num:=10 b.ResetTimer() for i:=0;i\x26lt;b.N;i\x2b\x2b{ fmt.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-12 11:27:09 \x2b0800 CST",
+    "dateModified" : "2019-04-12 11:27:09 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2019\/test\/",
+    "wordCount" : "88",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Golang Test &amp; Benchmark</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2019-04-12 itemprop="datePublished">April 12, 2019</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>Go语言中的测试依赖go test命令。编写测试代码和编写普通的Go代码过程是类似的，并不需要学习新的语法、规则或工具。</strong></p>
+<p><strong>go test命令是一个按照一定约定和组织的测试代码的驱动程序。在包目录内，所有以_test.go为后缀名的源代码文件都是go test测试的一部分，不会被go build编译到最终的可执行文件中。</strong></p>
+<p><em><strong>method.go</strong></em></p>
+<pre><code>func AddFunction(a, b int) int {
+	return a + b
+}
+</code></pre><p><em><strong>method_test.go</strong></em></p>
+<pre><code>func TestAdd(t *testing.T) {
+	res := AddFunction(1, 2)
+	if res == 3 {
+		t.Log(&quot;Ok&quot;)
+	} else {
+		t.Fatal(&quot;Error&quot;)
+	}
+}
+</code></pre><p><strong>在终端相应的目录中运行 go test -v</strong></p>
+<pre><code>% go test -v
+=== RUN   TestAdd
+--- PASS: TestAdd (0.00s)
+        method_test.go:26: Ok
+PASS
+ok      example/fortest       0.007s
+</code></pre><br>
+<p><strong>基准测试主要是通过测试CPU和内存的效率问题，来评估被测试代码的性能，进而找到更好的解决方案。</strong></p>
+<p><em><strong>bench_test.go</strong></em></p>
+<pre><code>func BenchmarkSprintf(b *testing.B){
+	num:=10
+	b.ResetTimer()
+	for i:=0;i&lt;b.N;i++{
+		fmt.Sprintf(&quot;%d&quot;, num)
+	}
+}
+</code></pre><pre><code>go test -bench=. -run=none
+BenchmarkSprintf-8      20000000               117 ns/op
+PASS
+ok      example/forbench       2.474s
+</code></pre><p><strong>运行基准测试也要使用go test命令，不过我们要加上-bench= 标记，它接受一个表达式作为参数，匹配基准测试的函数，.表示运行所有基准测试。-8表示运行时对应的GOMAXPROCS的值。20000000表示运行for循环的次数</strong></p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2019/oop/" class="prev" rel="prev" title="Golang OOP"><i class="iconfont icon-left"></i>&nbsp;Golang OOP</a>
+         
+        
+        <a href="http://example.org/2019/reflect/" class="next" rel="next" title="Golang Reflect">Golang Reflect&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

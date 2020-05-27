@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2019/test/" />
+  <link rel="next" href="http://example.org/2019/sql/" />
+  <link rel="canonical" href="http://example.org/2019/reflect/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Golang Reflect | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Golang Reflect | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Golang Reflect",
+    "headline" : "Golang Reflect",
+    "description" : "反射是指在程序运行期对程序本身进行访问和修改的能力。程序在编译时，变量被转换为内存地址，变量名不会被编译器写入到可执行部分。在运行程序时，程序无法获取自身的信息。\n支持反射的语言可以在程序编译期将变量的反射信息，如字段名称、类型信息、结构体信息等整合到可执行文件中，并给程序提供接口访问反射信息，这样就可以在程序运行期获取类型的反射信息，并且有能力修改它们。\n在Go语言中反射的相关功能由内置的reflect包提供，任意接口值在反射中都可以理解为由reflect.Type和reflect.Value两部分组成，并且reflect包提供了reflect.TypeOf和reflect.ValueOf两个函数来获取任意对象的Type和Value。\nfunc main() { u:= User{\x26quot;张三\x26quot;,20} \/\/ reflect.TypeOf可以获取任意对象的具体类型 t:=reflect.TypeOf(u) \/\/ reflect.ValueOf可以获取任意对象的Value v:=reflect.ValueOf(u) fmt.Println(t) fmt.Println(v) } type User struct{ Name string Age int } \nreflect.Value同时持有一个对象的reflect.Value和reflect.Type,所以我们可以通过reflect.Value的Interface方法实现还原。\nu1:=v.Interface().(User) t1:=v.Type() fmt.Println(u1) fmt.Println(t1) \n遍历字段和方法\nfor i:=0; i\x26lt;t.NumField(); i\x2b\x2b { fmt.Println(t.Field(i).Name) } for i:=0; i\x26lt;t.NumMethod(); i\x2b\x2b { fmt.Println(t.Method(i).Name) } 修改字段的值\n在运行中动态的修改某个字段的值\nfunc main() { x:=2 \/\/ 避免值拷贝，需要传入要修改变量的地址 v:=reflect.ValueOf(\x26amp;x) v.Elem().SetInt(100) fmt.Println(x) } \n动态调用方法\ntype User struct{ Name string Age int } func (u User) Print(prfix string){ fmt.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-18 11:23:07 \x2b0800 CST",
+    "dateModified" : "2019-04-18 11:23:07 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2019\/reflect\/",
+    "wordCount" : "92",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Golang Reflect</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2019-04-18 itemprop="datePublished">April 18, 2019</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>反射是指在程序运行期对程序本身进行访问和修改的能力。程序在编译时，变量被转换为内存地址，变量名不会被编译器写入到可执行部分。在运行程序时，程序无法获取自身的信息。</strong></p>
+<p><strong>支持反射的语言可以在程序编译期将变量的反射信息，如字段名称、类型信息、结构体信息等整合到可执行文件中，并给程序提供接口访问反射信息，这样就可以在程序运行期获取类型的反射信息，并且有能力修改它们。</strong></p>
+<p><strong>在Go语言中反射的相关功能由内置的reflect包提供，任意接口值在反射中都可以理解为由reflect.Type和reflect.Value两部分组成，并且reflect包提供了reflect.TypeOf和reflect.ValueOf两个函数来获取任意对象的Type和Value。</strong></p>
+<pre><code>func main() {
+	u:= User{&quot;张三&quot;,20}
+	// reflect.TypeOf可以获取任意对象的具体类型
+	t:=reflect.TypeOf(u)
+	// reflect.ValueOf可以获取任意对象的Value
+	v:=reflect.ValueOf(u)
+	
+	fmt.Println(t)
+	fmt.Println(v)
+}
+
+type User struct{
+	Name string
+	Age int
+}
+</code></pre><br>
+<p><strong>reflect.Value同时持有一个对象的reflect.Value和reflect.Type,所以我们可以通过reflect.Value的Interface方法实现还原。</strong></p>
+<pre><code>u1:=v.Interface().(User)
+t1:=v.Type()
+fmt.Println(u1)
+fmt.Println(t1)
+</code></pre><br>
+<p><strong>遍历字段和方法</strong></p>
+<pre><code>for i:=0; i&lt;t.NumField(); i++ {
+	fmt.Println(t.Field(i).Name)
+}
+
+for i:=0; i&lt;t.NumMethod(); i++  {
+	fmt.Println(t.Method(i).Name)
+}
+</code></pre><p><strong>修改字段的值</strong><br>
+在运行中动态的修改某个字段的值</p>
+<pre><code>func main() {
+	x:=2
+	// 避免值拷贝，需要传入要修改变量的地址
+	v:=reflect.ValueOf(&amp;x)
+	v.Elem().SetInt(100)
+	fmt.Println(x)
+}
+</code></pre><br>  
+<p><strong>动态调用方法</strong></p>
+<pre><code>type User struct{
+	Name string
+	Age int
+}
+
+func (u User) Print(prfix string){
+	fmt.Printf(&quot;%s:Name is %s,Age is %d&quot;,prfix,u.Name,u.Age)
+}
+
+func main() {
+	u:=User{&quot;张三&quot;,20}
+	v:=reflect.ValueOf(u)
+	// MethodByName方法根据方法名获取方法对象
+	mPrint:=v.MethodByName(&quot;Print&quot;)
+	// 构建好该方法需要的reflect类型参数
+	args:=[]reflect.Value{reflect.ValueOf(&quot;前缀&quot;)}
+	// 调用Call
+	fmt.Println(mPrint.Call(args))
+}
+</code></pre>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2019/test/" class="prev" rel="prev" title="Golang Test &amp; Benchmark"><i class="iconfont icon-left"></i>&nbsp;Golang Test &amp; Benchmark</a>
+         
+        
+        <a href="http://example.org/2019/sql/" class="next" rel="next" title="Golang MySQL">Golang MySQL&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/wordcloud/" />
+  <link rel="next" href="http://example.org/2018/rcnn/" />
+  <link rel="canonical" href="http://example.org/2018/nms/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Non Maximum Suppression | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Non Maximum Suppression | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Non Maximum Suppression",
+    "headline" : "Non Maximum Suppression",
+    "description" : "IOU(区域交并比) IOU的原称为Intersection over Union，也就是两个box区域的交集比上并集，用于确定两个框的位置像素距离。 计算两个边框 IoU 的公式如下所示:\n算法逻辑：\n 输入: n 行 4 列的候选框数组, 以及对应的 n 行 1 列的置信度数组. 输出: m 行 4 列的候选框数组, 以及对应的 m 行 1 列的置信度数组, m 对应的是去重后的候选框数量  绝大部分人脸检测器的核心是分类器，即给定一个尺寸固定图片，分类器判断是或者不是人脸；将分类器进化为检测器的关键是：在原始图像上从多个尺度产生窗口，并resize到固定尺寸，然后送给分类器做判断。最常用的方法是滑动窗口。\n由于滑动窗口，同一个人可能有好几个框(每一个框都带有一个分类器得分)\n而我们的目标是一个人只保留一个最优的框。 于是我们就要用到非极大值抑制，来抑制那些冗余的框： 抑制的过程是一个迭代-遍历-消除的过程。\n将所有框的得分排序，选中最高分及其对应的框：\n遍历其余的框，如果和当前最高分框的重叠面积(IOU)大于一定阈值，我们就将框删除。\n从未处理的框中继续选一个得分最高的，重复上述过程。\n算法流程：\n 计算 n 个候选框的面积大小 对置信度进行排序, 获取排序后的下标序号, 即采用argsort 将当前置信度最大的框加入返回值列表中 获取当前置信度最大的候选框与其他任意候选框的相交面积 利用相交的面积和两个框自身的面积计算框的交并比, 将交并比大于阈值的框删除. 对剩余的框重复以上过程  Python\nimport cv2 import numpy as np def nms(bounding_boxes, confidence_score, threshold): if len(bounding_boxes) == 0: return [], [] bboxes = np.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-06-02 16:22:37 \x2b0800 CST",
+    "dateModified" : "2018-06-02 16:22:37 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/nms\/",
+    "wordCount" : "198",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Non Maximum Suppression</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-06-02 itemprop="datePublished">June 2, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>IOU(区域交并比)
+IOU的原称为Intersection over Union，也就是两个box区域的交集比上并集，用于确定两个框的位置像素距离。
+<img src="/media/NMS/1.png" alt=""></p>
+<p>计算两个边框 IoU 的公式如下所示:</p>
+<p><img src="/media/NMS/2.png" alt=""></p>
+<p>算法逻辑：</p>
+<ul>
+<li>输入: n 行 4 列的候选框数组, 以及对应的 n 行 1 列的置信度数组.</li>
+<li>输出: m 行 4 列的候选框数组, 以及对应的 m 行 1 列的置信度数组, m 对应的是去重后的候选框数量</li>
+</ul>
+<p>绝大部分人脸检测器的核心是分类器，即给定一个尺寸固定图片，分类器判断是或者不是人脸；将分类器进化为检测器的关键是：在原始图像上从多个尺度产生窗口，并resize到固定尺寸，然后送给分类器做判断。最常用的方法是滑动窗口。</p>
+<p>由于滑动窗口，同一个人可能有好几个框(每一个框都带有一个分类器得分)</p>
+<p><img src="/media/NMS/3.png" alt=""></p>
+<p>而我们的目标是一个人只保留一个最优的框。
+于是我们就要用到非极大值抑制，来抑制那些冗余的框： 抑制的过程是一个迭代-遍历-消除的过程。</p>
+<p>将所有框的得分排序，选中最高分及其对应的框：</p>
+<p><img src="/media/NMS/4.png" alt=""></p>
+<p>遍历其余的框，如果和当前最高分框的重叠面积(IOU)大于一定阈值，我们就将框删除。</p>
+<p><img src="/media/NMS/5.png" alt=""></p>
+<p>从未处理的框中继续选一个得分最高的，重复上述过程。</p>
+<p><img src="/media/NMS/6.png" alt=""></p>
+<p>算法流程：</p>
+<ul>
+<li>计算 n 个候选框的面积大小</li>
+<li>对置信度进行排序, 获取排序后的下标序号, 即采用argsort</li>
+<li>将当前置信度最大的框加入返回值列表中</li>
+<li>获取当前置信度最大的候选框与其他任意候选框的相交面积</li>
+<li>利用相交的面积和两个框自身的面积计算框的交并比, 将交并比大于阈值的框删除.</li>
+<li>对剩余的框重复以上过程</li>
+</ul>
+<p>Python</p>
+<pre><code>import cv2
+import numpy as np
+
+def nms(bounding_boxes, confidence_score, threshold):
+    if len(bounding_boxes) == 0:
+        return [], []
+    bboxes = np.array(bounding_boxes)
+    score = np.array(confidence_score)
+
+    # 计算 n 个候选框的面积大小
+    x1 = bboxes[:, 0]
+    y1 = bboxes[:, 1]
+    x2 = bboxes[:, 2]
+    y2 = bboxes[:, 3]
+    areas =(x2 - x1 + 1) * (y2 - y1 + 1)
+
+    # 对置信度进行排序, 获取排序后的下标序号, argsort 默认从小到大排序
+    order = np.argsort(score)
+
+    picked_boxes = [] # 返回值
+    picked_score = [] # 返回值
+    while order.size &gt; 0:
+        # 将当前置信度最大的框加入返回值列表中
+        index = order[-1]
+        picked_boxes.append(bounding_boxes[index])
+        picked_score.append(confidence_score[index])
+
+        # 获取当前置信度最大的候选框与其他任意候选框的相交面积
+        x11 = np.maximum(x1[index], x1[order[:-1]]) #x11是一组数而不是一个数
+        y11 = np.maximum(y1[index], y1[order[:-1]])
+        x22 = np.minimum(x2[index], x2[order[:-1]])
+        y22 = np.minimum(y2[index], y2[order[:-1]])
+        w = np.maximum(0.0, x22 - x11 + 1)
+        h = np.maximum(0.0, y22 - y11 + 1)
+        intersection = w * h
+
+        # 利用相交的面积和两个框自身的面积计算框的交并比, 将交并比大于阈值的框删除
+
+        ratio = intersection / (areas[index] + areas[order[:-1]] - intersection)
+
+        left = np.where(ratio &lt; threshold)
+        order = order[left]
+
+    return picked_boxes, picked_score
+</code></pre>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/wordcloud/" class="prev" rel="prev" title="Wordcloud"><i class="iconfont icon-left"></i>&nbsp;Wordcloud</a>
+         
+        
+        <a href="http://example.org/2018/rcnn/" class="next" rel="next" title="RCNN">RCNN&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

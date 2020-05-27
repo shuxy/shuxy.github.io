@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2020/captcha/" />
+  
+  <link rel="canonical" href="http://example.org/2020/blur/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Blur Detection | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Blur Detection | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Blur Detection",
+    "headline" : "Blur Detection",
+    "description" : "拉普拉斯算子突出显示了包含快速强度变化的图像区域，通常用于边缘检测。\n如果图像包含高方差，则代表图像正常对焦（边缘型和非边缘型）的分布范围将很大。但是，如果 方差非常低，则对焦范围小，表明图像中的边缘很少。众所周知，图像越模糊，边缘越少。\n拉普拉斯内核： 用拉普拉斯算子做图片模糊检测的技巧是设置正确的阈值，该阈值可能完全取决于域。阈值太低，如果图像不清晰则将其错误地标记为模糊。如果阈值太高，则实际上模糊的图像将不会被标记为模糊。\n整体流程概括：\n  读取图片数据\n  对其进行灰度转换（三通道 -\x26gt; 一通道）\n  使用拉普拉斯内核卷积图片（图片数据 * 卷积核 \x26ndash;\x26gt; 对应位置的乘法）\n  计算图片方差（具体计算方式是先将卷积后的图片拉伸成一维，然后求其均值，利用广播机制求解每个位置的value和mean之间的差值，最后用dot对差值矩阵和差值矩阵转置进行点积）\n  from imutils import paths import cv2 def variance_of_laplacian(image): return cv2.Laplacian(image, cv2.CV_64F).var() for imagePath in paths.list_images(\x27\/Users\/shuxy\/Desktop\/pic\/\x27): # 读取图片 image = cv2.imread(imagePath) # 将图片转换为灰度图片 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) # 计算灰度图片的方差 fm = variance_of_laplacian(gray) text = \x26quot;Not Blurry\x26quot; # 设置输出的文字 if fm \x26lt; 100.: text = \x26quot;Blurry\x26quot; # 显示结果 cv2.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-05-05 10:22:42 \x2b0800 CST",
+    "dateModified" : "2020-05-05 10:22:42 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2020\/blur\/",
+    "wordCount" : "84",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Blur Detection</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2020-05-05 itemprop="datePublished">May 5, 2020</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>拉普拉斯算子突出显示了包含快速强度变化的图像区域，通常用于边缘检测。</strong></p>
+<p>如果图像包含高方差，则代表图像正常对焦（边缘型和非边缘型）的分布范围将很大。但是，如果  方差非常低，则对焦范围小，表明图像中的边缘很少。众所周知，图像越模糊，边缘越少。</p>
+<p>拉普拉斯内核：
+<img src="/media/blur/1.png" alt=""></p>
+<p>用拉普拉斯算子做图片模糊检测的技巧是设置正确的阈值，该阈值可能完全取决于域。阈值太低，如果图像不清晰则将其错误地标记为模糊。如果阈值太高，则实际上模糊的图像将不会被标记为模糊。</p>
+<p>整体流程概括：</p>
+<ol>
+<li>
+<p>读取图片数据</p>
+</li>
+<li>
+<p>对其进行灰度转换（三通道 -&gt; 一通道）</p>
+</li>
+<li>
+<p>使用拉普拉斯内核卷积图片（图片数据 * 卷积核 &ndash;&gt; 对应位置的乘法）</p>
+</li>
+<li>
+<p>计算图片方差（具体计算方式是先将卷积后的图片拉伸成一维，然后求其均值，利用广播机制求解每个位置的value和mean之间的差值，最后用dot对差值矩阵和差值矩阵转置进行点积）</p>
+</li>
+</ol>
+<pre><code>from imutils import paths
+import cv2
+
+def variance_of_laplacian(image):
+    return cv2.Laplacian(image, cv2.CV_64F).var()
+
+for imagePath in paths.list_images('/Users/shuxy/Desktop/pic/'):
+    # 读取图片
+    image = cv2.imread(imagePath)
+    # 将图片转换为灰度图片
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # 计算灰度图片的方差
+    fm = variance_of_laplacian(gray)
+    text = &quot;Not Blurry&quot;
+
+    # 设置输出的文字
+    if fm &lt; 100.:
+        text = &quot;Blurry&quot;
+
+    # 显示结果
+    cv2.putText(image, &quot;{}: {:.2f}&quot;.format(text, fm), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 3)
+
+    cv2.imshow(&quot;Image&quot;, image)
+    # cv2.waitKey([delay]) → retval，如果delay = 0，则图片永远显示，直到你按下任意一个键，才被关掉；delay单位是毫秒 ⚠️这里无法正常结束图片显示窗口
+    cv2.waitKey(0) 
+</code></pre><p><img src="/media/blur/2.png" alt=""><br>
+<img src="/media/blur/3.png" alt=""></p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2020/captcha/" class="prev" rel="prev" title="Golang Captcha"><i class="iconfont icon-left"></i>&nbsp;Golang Captcha</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

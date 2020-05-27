@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/bootstrap/" />
+  <link rel="next" href="http://example.org/2018/nms/" />
+  <link rel="canonical" href="http://example.org/2018/wordcloud/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Wordcloud | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Wordcloud | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Wordcloud",
+    "headline" : "Wordcloud",
+    "description" : "wordcloud标签云\nWordCloud()参数介绍：\n font_path：指定字体路径，包括otf和ttf width：词云的宽度，默认为400 height：词云的高度，默认为200 mask：定制词云的形状，通常结合PIL\x26amp;numpy一起使用，其中PIL可以用python读取图片；numpy可将PIL读取的图片转换为数字的形式，最后作为对象传递给mask min_font_size：最小字号，默认为4 max_font_size：最大字号，默认为词云的高度 max_words：词的最大数量，默认为200 stopwords：被忽略的停用词，如果不指定则使用默认的停用词词库 background_color：背景颜色，默认black mode：默认RGB模式，如果为RGBA模式并且background_color为None，则背景变为透明  DIY词云字体\nfrom wordcloud import WordCloud import matplotlib.pyplot as plt import jieba text = open(\x27xiyouji.txt\x27).read() # 西游记 text = \x27 \x27.join(jieba.cut(text)) #jieba分词做好后是list的形式，这里将他们变成以空格隔开的字符串形式，类似于英文的表达形式 wc = WordCloud(font_path=\x27Hiragino.ttf\x27, width=800, height=600, mode=\x27RGBA\x27, background_color=None).generate(text) plt.imshow(wc, interpolation=\x27bilinear\x27) plt.axis(\x27off\x27) # 关闭图片的坐标轴 plt.show() 使用特定形状的图片做标签云\nfrom wordcloud import WordCloud from PIL import Image import numpy as np import matplotlib.pyplot as plt import jieba text = open(\x27xiyouji.txt\x27).read() text = \x27 \x27.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-05-10 19:55:43 \x2b0800 CST",
+    "dateModified" : "2018-05-10 19:55:43 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/wordcloud\/",
+    "wordCount" : "289",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Wordcloud</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-05-10 itemprop="datePublished">May 10, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><em><strong>wordcloud标签云</strong></em></p>
+<p>WordCloud()参数介绍：</p>
+<ul>
+<li>font_path：指定字体路径，包括otf和ttf</li>
+<li>width：词云的宽度，默认为400</li>
+<li>height：词云的高度，默认为200</li>
+<li>mask：定制词云的形状，通常结合PIL&amp;numpy一起使用，其中PIL可以用python读取图片；numpy可将PIL读取的图片转换为数字的形式，最后作为对象传递给mask</li>
+<li>min_font_size：最小字号，默认为4</li>
+<li>max_font_size：最大字号，默认为词云的高度</li>
+<li>max_words：词的最大数量，默认为200</li>
+<li>stopwords：被忽略的停用词，如果不指定则使用默认的停用词词库</li>
+<li>background_color：背景颜色，默认black</li>
+<li>mode：默认RGB模式，如果为RGBA模式并且background_color为None，则背景变为透明</li>
+</ul>
+<p><strong>DIY词云字体</strong></p>
+<pre><code>from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+import jieba
+
+text = open('xiyouji.txt').read()  # 西游记
+
+text = ' '.join(jieba.cut(text))  #jieba分词做好后是list的形式，这里将他们变成以空格隔开的字符串形式，类似于英文的表达形式
+
+wc = WordCloud(font_path='Hiragino.ttf', width=800, height=600, mode='RGBA', background_color=None).generate(text)
+
+plt.imshow(wc, interpolation='bilinear')
+plt.axis('off')  # 关闭图片的坐标轴
+plt.show()
+</code></pre><p><img src="/media/wordcloud/1.png" alt=""></p>
+<p><strong>使用特定形状的图片做标签云</strong></p>
+<pre><code>from wordcloud import WordCloud
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+import jieba
+
+text = open('xiyouji.txt').read()
+text = ' '.join(jieba.cut(text))
+
+mask = np.array(Image.open(&quot;black_mask.png&quot;))
+
+wc = WordCloud(mask = mask, font_path='Hiragino.ttf', width=800, height=600, mode='RGBA', background_color=None).generate(text)
+
+plt.imshow(wc, interpolation='bilinear')
+plt.axis('off')
+plt.show()
+</code></pre><p><img src="/media/wordcloud/2.png" alt=""><img src="/media/wordcloud/3.png" alt=""></p>
+<p><strong>根据图片的原始颜色，为标签云上色</strong></p>
+<pre><code>from wordcloud import WordCloud, ImageColorGenerator
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+import jieba
+
+text = open('xiyouji.txt').read()
+text = ' '.join(jieba.cut(text))
+
+mask = np.array(Image.open(&quot;color_mask.png&quot;))
+
+wc = WordCloud(mask = mask, font_path='Hiragino.ttf', width=800, height=600, mode='RGBA', background_color=None).generate(text)
+
+image_colors = ImageColorGenerator(mask)
+wc.recolor(color_func=image_colors)
+
+plt.imshow(wc, interpolation='bilinear')
+plt.axis('off')
+plt.show()
+</code></pre><p><img src="/media/wordcloud/4.png" alt=""><img src="/media/wordcloud/5.png" alt=""></p>
+<p><strong><a href="https://www.w3.org/wiki/CSS3/Color/HSL">自定义颜色</a></strong></p>
+<pre><code>from wordcloud import WordCloud, ImageColorGenerator
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+import jieba
+
+text = open('xiyouji.txt').read()
+text = ' '.join(jieba.cut(text))
+
+# 颜色函数
+def random_color(word, font_size, position, orientation,
+                font_path, random_state):  # 颜色参数并不是缺省的，必须得有，不然报错
+    s = 'hsl(0, %d%%, %d%%)' % (random.randint(60, 80), random.randint(60, 80))  # 这里是hsl的配色方案，h = hue色相，s = saturation饱和度，l = lightning亮度，%%表示percent
+    return s
+
+mask = np.array(Image.open(&quot;color_mask.png&quot;))
+
+wc = WordCloud(color_func = random_color, mask = mask, font_path='Hiragino.ttf',
+               width=800, height=600, mode='RGBA', background_color=None).generate(text)
+
+plt.imshow(wc, interpolation='bilinear')
+plt.axis('off')
+plt.show()
+</code></pre><p><img src="/media/wordcloud/6.png" alt=""></p>
+<p><strong>细节控制（出现的词、词大小、词颜色）</strong><br>
+<strong>generate_from_frequencies()，参数：</strong></p>
+<ul>
+<li><strong>frequencies：字典类型，用于指定词和对应大小</strong></li>
+<li><strong>max_font_size：最大字号，默认为None</strong></li>
+<li><strong>⚠️就功能而言，generate() = process_text() + <strong><strong>generate_from_frequencies</strong></strong>()，其中process_text()是wordcloud默认的切割方法</strong></li>
+</ul>
+<pre><code>from wordcloud import WordCloud, ImageColorGenerator
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+import jieba.analyse
+
+text = open('xiyouji.txt').read()
+
+freq = jieba.analyse.extract_tags(text, topK=200, withWeight=True)  # 用jieba提取top200的关键词以及其权重
+
+freq = {i[0] : i[1] for i in freq}. #将列表元素为tuple形式的数据变为字典
+
+mask = np.array(Image.open(&quot;color_mask.png&quot;))
+wc = WordCloud(mask = mask, font_path='Hiragino.ttf',
+
+               width=800, height=600, mode='RGBA', background_color=None).generate_from_frequencies(freq)
+
+image_colors = ImageColorGenerator(mask)
+wc.recolor(color_func=image_colors)
+
+plt.imshow(wc, interpolation='bilinear')
+plt.axis('off')
+plt.show()
+
+wc.to_file(save_path)
+</code></pre><p><img src="/media/wordcloud/7.png" alt=""></p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/bootstrap/" class="prev" rel="prev" title="Bootstrap"><i class="iconfont icon-left"></i>&nbsp;Bootstrap</a>
+         
+        
+        <a href="http://example.org/2018/nms/" class="next" rel="next" title="Non Maximum Suppression">Non Maximum Suppression&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

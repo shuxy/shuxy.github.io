@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/graphviz/" />
+  <link rel="next" href="http://example.org/2018/sichuan/" />
+  <link rel="canonical" href="http://example.org/2018/receptive/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Receptive Field | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Receptive Field | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Receptive Field",
+    "headline" : "Receptive Field",
+    "description" : "The receptive field is defined as the region in the input space that a particular CNN’s feature is looking at.\n在卷积神经网络中，感受野（Receptive Field）的定义是卷积神经网络每一层输出的特征图（feature map）上每个像素点在原始图像上映射的区域大小。\n神经元之所以无法对原始图像的所有信息进行感知，是因为在卷积神经网络中普遍使用卷积层和pooling层，在层与层之间均为局部连接。\n神经元感受野的值越大表示其能接触到的原始图像范围就越大，也意味着它可能蕴含更为全局，语义层次更高的特征；相反，值越小则表示其所包含的特征越趋向局部和细节。因此感受野的值可以用来大致判断每一层的抽象层次。 深层卷积层的感受野大小和它之前所有层的滤波器大小和步长有关系，而涉及到这两个参数的有卷积层和pooling层。我们用分别 $k_n, s_n, r_n$ 表示第n层的kernel_size，stride，receptive_field，通过对 n-1层输出特征图的 $k_n*k_n$ 个感受野为 $r_{n−1}$ 的特征单元卷积得到的n层输出特征单元最大的感受野为 $r_{n−1}*kn$ ，但在对 n-1层输入特征图进行卷积时，经常会由于 $s_{n−1}$ 小于 $k_{n−1}$ 而存在重叠，因此要减去个重叠部分（ $k_n=2$ 存在一个重叠部分，$k_n=3$ 存在两个重叠部分）\n重叠的部分一定是与stride的有关的,如果stride很大,显然是不会有重合,所以,越小重合越多。\n要求第n层输出的感受野,就要知道前一层n-1的感受野,以及本层的kernel和stride大小,这是一个不断递推的过程.\n对于卷积神经网络,其感受野计算有如下规律: $$ \\begin{equation} \\begin{split} \\ r_n \x26amp;= r_{n-1}*k_n-(r_{n-1}-\\prod^{n-1}_{i=1}{s_i})*(k_n-1) \\\n\\end{split} \\tag{1} \\end{equation} $$\n经过简单的代数变换之后，最终形式为： $$ \\begin{equation} \\begin{split} \\ r_n \x26amp;= r_{n-1}\x2b(k_n-1)\\prod^{n-1}_{i=1}{s_i} \\\n\\end{split} \\tag{2} \\end{equation} $$",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-10-10 13:52:29 \x2b0800 CST",
+    "dateModified" : "2018-10-10 13:52:29 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/receptive\/",
+    "wordCount" : "78",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Receptive Field</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-10-10 itemprop="datePublished">October 10, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><em><strong>The receptive field is defined as the region in the input space that a particular CNN’s feature is looking at.</strong></em></p>
+<p>在卷积神经网络中，感受野（Receptive Field）的定义是卷积神经网络每一层输出的特征图（feature map）上每个像素点在原始图像上映射的区域大小。<br>
+神经元之所以无法对原始图像的所有信息进行感知，是因为在卷积神经网络中普遍使用卷积层和pooling层，在层与层之间均为局部连接。<br>
+神经元感受野的值越大表示其能接触到的原始图像范围就越大，也意味着它可能蕴含更为全局，语义层次更高的特征；相反，值越小则表示其所包含的特征越趋向局部和细节。因此感受野的值可以用来大致判断每一层的抽象层次。
+深层卷积层的感受野大小和它之前所有层的滤波器大小和步长有关系，而涉及到这两个参数的有卷积层和pooling层。我们用分别 $k_n, s_n, r_n$ 表示第n层的kernel_size，stride，receptive_field，通过对 n-1层输出特征图的 $k_n*k_n$ 个感受野为 $r_{n−1}$ 的特征单元卷积得到的n层输出特征单元最大的感受野为 $r_{n−1}*kn$ ，但在对 n-1层输入特征图进行卷积时，经常会由于 $s_{n−1}$ 小于 $k_{n−1}$ 而存在重叠，因此要减去个重叠部分（ $k_n=2$ 存在一个重叠部分，$k_n=3$ 存在两个重叠部分）<br>
+重叠的部分一定是与stride的有关的,如果stride很大,显然是不会有重合,所以,越小重合越多。<br>
+要求第n层输出的感受野,就要知道前一层n-1的感受野,以及本层的kernel和stride大小,这是一个不断递推的过程.<br>
+对于卷积神经网络,其感受野计算有如下规律:
+$$
+\begin{equation}
+\begin{split}
+\ r_n &amp;= r_{n-1}*k_n-(r_{n-1}-\prod^{n-1}_{i=1}{s_i})*(k_n-1) \<br>
+\end{split} \tag{1}
+\end{equation}
+$$<br>
+经过简单的代数变换之后，最终形式为：
+$$
+\begin{equation}
+\begin{split}
+\ r_n &amp;= r_{n-1}+(k_n-1)\prod^{n-1}_{i=1}{s_i} \<br>
+\end{split} \tag{2}
+\end{equation}
+$$</p>
+<p><strong>如何增加感受野？</strong></p>
+<ul>
+<li>增加pooling层，但是会降低准确性</li>
+<li>增大卷积核的kernel size，但是会增加参数</li>
+<li>增加卷积层的个数，但是会面临梯度消失的问题</li>
+</ul>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/graphviz/" class="prev" rel="prev" title="Graphviz"><i class="iconfont icon-left"></i>&nbsp;Graphviz</a>
+         
+        
+        <a href="http://example.org/2018/sichuan/" class="next" rel="next" title="Sichuan">Sichuan&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

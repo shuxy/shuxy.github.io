@@ -1,0 +1,115 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Shuxy&#39;s Blog on Shuxy&#39;s Blog</title>
+    <link>http://example.org/</link>
+    <description>Recent content in Shuxy&#39;s Blog on Shuxy&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 05 May 2020 10:22:42 +0800</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Posts</title>
+      <link>http://example.org/posts/</link>
+      <pubDate>Tue, 05 May 2020 10:22:42 +0800</pubDate>
+      
+      <guid>http://example.org/posts/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>About Me</title>
+      <link>http://example.org/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/about/</guid>
+      <description>&lt;p&gt;&lt;em&gt;&lt;strong&gt;Shu Xinyu&lt;/strong&gt;&lt;/em&gt;&lt;br&gt;
+1995/04/21 &lt;br&gt;
+&lt;a href=&#34;mailto:shuxy0421@163.com&#34;&gt;shuxy0421@163.com&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Skills&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Golang(Familiar) —— Backend development&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Beego&lt;/li&gt;
+&lt;li&gt;MySQL&lt;/li&gt;
+&lt;li&gt;Redis&lt;/li&gt;
+&lt;li&gt;Nginx&lt;/li&gt;
+&lt;li&gt;MongoDB&lt;/li&gt;
+&lt;li&gt;Linux&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Python(Familiar) —— Machine Learning &amp;amp; Computer Vision&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Numpy&lt;/li&gt;
+&lt;li&gt;Pandas&lt;/li&gt;
+&lt;li&gt;Scikit-Learn&lt;/li&gt;
+&lt;li&gt;Matplotlib&lt;/li&gt;
+&lt;li&gt;TensorFlow&lt;/li&gt;
+&lt;li&gt;OpenCV&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Education&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.jnu.edu.cn/&#34;&gt;Jinan University&lt;/a&gt;    Computer Science and Technology     Master     2017 ~ 2019&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ahut.edu.cn/&#34;&gt;Anhui University of Technology&lt;/a&gt;     Computer Science and Information Engineering    Bachelor      2013 ~ 2017&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Working Experience&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;Shenzhen Mingtong Technology Co. Ltd.  Jul 2019 ~ May 2020
+&lt;ul&gt;
+&lt;li&gt;Summarize and design specific solutions to problems&lt;/li&gt;
+&lt;li&gt;Responsible for the realization of computer vision related models&lt;/li&gt;
+&lt;li&gt;Participate in rural contour recognition projects, responsible for image processing, scheme design and deep learning model building&amp;amp;training&lt;/li&gt;
+&lt;li&gt;Participate in the Location Based Service outdoor positioning project, responsible for POI data cleaning, mathematical analysis and result visualization.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Big Data Decision Institute (part-time)  Jul 2018 ~ Oct 2018
+&lt;ul&gt;
+&lt;li&gt;Collection and reading of the latest literature in the medical field&lt;/li&gt;
+&lt;li&gt;Participate in the research of personalized algorithms in the intelligent medical module, solve the problem of accurate division of similar people&lt;/li&gt;
+&lt;li&gt;Solve the problem of unstable effects of traditional clustering algorithms, design personalized clustering algorithms&lt;/li&gt;
+&lt;li&gt;Improve the personalized matching framework of medical patients, use transfer learning to solve the small sample set modeling&amp;rsquo;s overfitting problem&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Project Experience&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;Rural contour recognition  Nov 2019 ~ Apr 2020
+&lt;ul&gt;
+&lt;li&gt;Use a pre-trained AlexNet network + image block structure training architecture to locate the specific location of the rural area while maximizing the ratio of the rural area to the candidate area.&lt;/li&gt;
+&lt;li&gt;openCV finds rural contour coordinates and outlines rural areas.&lt;/li&gt;
+&lt;li&gt;Design irregular IOU calculation method and estimate the performance interval of the model through multiple trials.&lt;/li&gt;
+&lt;li&gt;Integrated package of rural area detection and contour extraction&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;LBS outdoor positioning   Aug 2019 ~ Dec 2019
+&lt;ul&gt;
+&lt;li&gt;Use the Isolated Forest algorithm to delete the sample points of abnormal signal fluctuations to improve the robustness of the model.&lt;/li&gt;
+&lt;li&gt;Comparing the performance advantages of linear algorithm and tree algorithm.&lt;/li&gt;
+&lt;li&gt;Using the properties of the perpendicular and the Pythagorean theorem to find the expression of the solution of the three-point positioning equation.&lt;/li&gt;
+&lt;li&gt;Longitude and latitude information + folium scatter plot to visualize the positioning results&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Mobile communication base station classification (participation) Apr 2020 ~ May 2020
+&lt;ul&gt;
+&lt;li&gt;Design a picture crawler program based on the selenium framework to increase the total amount of training data&lt;/li&gt;
+&lt;li&gt;Implement SPP-Net Layer to solve the problem of inconsistent picture size during training&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Competition Experience&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;Alibaba Tianchi Big Data Competition-&amp;ldquo;Meinian Health AI Competition-Double High Disease Risk Prediction&amp;rdquo;  Top3%  Apr 2018 ~ May 2018&lt;/li&gt;
+&lt;li&gt;DataCastle competition-&amp;ldquo;National Energy Day New PV Power Forecasting Competition&amp;rdquo;  Top5%  Oct 2018 ~ Nov 2018&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;:/undefined&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

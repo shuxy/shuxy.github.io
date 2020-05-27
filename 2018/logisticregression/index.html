@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  
+  <link rel="next" href="http://example.org/2018/adaboost/" />
+  <link rel="canonical" href="http://example.org/2018/logisticregression/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Logistic Regression | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Logistic Regression | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Logistic Regression",
+    "headline" : "Logistic Regression",
+    "description" : "逻辑回归（Logistic Regression） 是一种用于分类的传统机器学习方法。它是通过对已有的样本进行学习，配合sigmoid函数将结果收敛到[0,1]之间，设定一个阈值，目标值大于设定阈值的分类为一类，反之设为另一类。逻辑回归一般用于二分类问题，线性回归的公式如下：\n$$ \\begin{equation} \\begin{split} \\ z \x26amp;= \\beta_0\x2b\\beta_1x_1\x2b\x26hellip;\x2b\\beta_nx_n \\\n\x26amp;= \\theta^Tx \\end{split} \\tag{1} \\end{equation} $$\nsigmoid函数公式如下： $$ \\begin{equation} \\begin{split} \\ h_\\theta(x)=g(\\theta^Tx)=\\frac{1}{1\x2be^{-z}} \\\n\x26amp;= \\frac{1}{1\x2be^{-\\theta^Tx}} \\end{split} \\tag{2} \\end{equation} $$\n使用极大似然估计求解Cost Function及梯度，假设类别为1的概率为： $$ \\begin{equation} \\begin{split} \\ P(y_i=1|x_i;\\theta) \\\n\x26amp;=h_\\theta(x_i) \\end{split} \\tag{3} \\end{equation} $$ 所以类别为0的概率为： $$ \\begin{equation} \\begin{split} \\ P(y_i=0|x_i;\\theta) \\\n\x26amp;=1-h_\\theta(x_i) \\end{split} \\tag{4} \\end{equation} $$ 因为逻辑回归中的事件符合伯努利分布，所以逻辑回归的概率密度函数可记做：连续型随机变量的概率密度函数（在不至于混淆时可以简称为密度函数）。这是一个描述这个随机变量的输出值，在某个确定的取值点附近的可能性的函数。而随机变量的取值落在某个区域之内的概率则为概率密度函数在这个区域上的积分。 $$ \\begin{equation} \\begin{split} \\ P(y_i|x_i;\\theta)=h_\\theta(x_i)(1-h_\\theta(x_i)) \\\n\\end{split} \\tag{5} \\end{equation} $$ 可变形为： $$ \\begin{equation} \\begin{split} \\ P(y_i|x_i;\\theta)=h_\\theta(x_i)^{y_i}(1-h_\\theta(x_i))^{1-y_i} \\",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-03-15 15:12:00 \x2b0800 CST",
+    "dateModified" : "2018-03-15 15:12:00 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/logisticregression\/",
+    "wordCount" : "245",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Logistic Regression</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-03-15 itemprop="datePublished">March 15, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><em><strong>逻辑回归（Logistic Regression）</strong></em>
+是一种用于分类的传统机器学习方法。它是通过对已有的样本进行学习，配合sigmoid函数将结果收敛到[0,1]之间，设定一个阈值，目标值大于设定阈值的分类为一类，反之设为另一类。逻辑回归一般用于二分类问题，线性回归的公式如下：</p>
+<p>$$
+\begin{equation}
+\begin{split}
+\ z &amp;= \beta_0+\beta_1x_1+&hellip;+\beta_nx_n \<br>
+&amp;= \theta^Tx
+\end{split} \tag{1}
+\end{equation}
+$$</p>
+<p>sigmoid函数公式如下：
+<br>$$
+\begin{equation}
+\begin{split}
+\ h_\theta(x)=g(\theta^Tx)=\frac{1}{1+e^{-z}} \<br>
+&amp;= \frac{1}{1+e^{-\theta^Tx}}
+\end{split} \tag{2}
+\end{equation}
+$$</p>
+<p>使用极大似然估计求解Cost Function及梯度，假设类别为1的概率为：
+<br>$$
+\begin{equation}
+\begin{split}
+\ P(y_i=1|x_i;\theta) \<br>
+&amp;=h_\theta(x_i)
+\end{split} \tag{3}
+\end{equation}
+$$
+所以类别为0的概率为：
+<br>$$
+\begin{equation}
+\begin{split}
+\ P(y_i=0|x_i;\theta) \<br>
+&amp;=1-h_\theta(x_i)
+\end{split} \tag{4}
+\end{equation}
+$$
+因为逻辑回归中的事件符合伯努利分布，所以逻辑回归的概率密度函数可记做：连续型随机变量的概率密度函数（在不至于混淆时可以简称为密度函数）。这是一个描述这个随机变量的输出值，在某个确定的取值点附近的可能性的函数。而随机变量的取值落在某个区域之内的概率则为概率密度函数在这个区域上的积分。
+<br>$$
+\begin{equation}
+\begin{split}
+\ P(y_i|x_i;\theta)=h_\theta(x_i)(1-h_\theta(x_i)) \<br>
+\end{split} \tag{5}
+\end{equation}
+$$
+可变形为：
+<br>$$
+\begin{equation}
+\begin{split}
+\ P(y_i|x_i;\theta)=h_\theta(x_i)^{y_i}(1-h_\theta(x_i))^{1-y_i} \<br>
+\end{split} \tag{6}
+\end{equation}
+$$
+则N个样本的极大似然估计为：
+<br>$$
+\begin{equation}
+\begin{split}
+\ L(\theta) &amp;= P(Y|X;\theta) \<br>
+&amp;= \prod^{N}_{i=1}{P(y_i|x_i;\theta)}
+\end{split} \tag{7}
+\end{equation}
+$$
+取对数后得：
+<br>$$
+\begin{equation}
+\begin{split}
+\ l(\theta)=ln(L(\theta))=\sum^{N}_{i=1}{y_ilogh_\theta(x_i)+(1-y_i)log(1-h_\theta(x_i)} \<br>
+\end{split} \tag{8}
+\end{equation}
+$$
+要使得Cost Function最小只需要在极大似然的结果前添加负号即可：
+<br>$$
+\begin{equation}
+\begin{split}
+\ J(\theta)=-l(\theta) \<br>
+\end{split} \tag{9}
+\end{equation}
+$$
+梯度为：
+<br>$$
+\begin{equation}
+\begin{split}
+\ \frac{\partial J(\theta)}{\partial \theta_j}=-\frac{\partial \sum^{N}_{i=1}{y_ilogh_\theta(x_i)+(1-y_i)log(1-h_\theta(x_i)}}{\partial \theta_j} \<br>
+&amp;= -\sum^{N}_{i=1}{[y_i\frac{1}{h_\theta(x_i)}-(1-y_i)\frac{1}{1-h_\theta(x_i)}]\frac{\partial h_\theta(x_i)}{\partial \theta_j}}
+\end{split} \tag{10}
+\end{equation}
+$$
+又因为：
+<br>$$
+\begin{equation}
+\begin{split}
+\ \frac{\partial h_\theta(x_i)}{\partial \theta_j}=\frac{\partial g(\theta^Tx_i)}{\partial \theta_j} \<br>
+&amp;= \frac{\partial g(\theta^Tx_i)}{\partial \theta^Tx_i}\frac{\partial \theta^Tx_i}{\partial \theta_j}
+\end{split} \tag{11}
+\end{equation}
+$$
+由Sigmoid函数的性质可得：
+<br>$$
+\begin{equation}
+\begin{split}
+\ \frac{\partial g(\theta^Tx_i)}{\partial \theta^Tx_i} \<br>
+&amp;= g(\theta^Tx_i)(1-g(\theta^Tx_i))
+\end{split} \tag{12}
+\end{equation}
+$$
+所以：
+<br>$$
+\begin{equation}
+\begin{split}
+\ \frac{\partial h_\theta(x_i)}{\partial \theta_j}=g(\theta^Tx_i)(1-g(\theta^Tx_i))\frac{\partial \theta^Tx_i}{\partial \theta_j} \<br>
+&amp;= g(\theta^Tx_i)(1-g(\theta^Tx_i))x_i^j
+\end{split} \tag{13}
+\end{equation}
+$$
+带回梯度公式最后化简得到：
+<br>$$
+\begin{equation}
+\begin{split}
+\ \frac{\partial J(\theta)}{\partial \theta_j} \<br>
+&amp;= \sum^{N}_{i=1}{(h_\theta(x_i)-y_i)x^j_i}
+\end{split} \tag{14}
+\end{equation}
+$$
+利用梯度下降方法更新权重得：
+<br>$$
+\begin{equation}
+\begin{split}
+\ \theta_{newj}=\theta_j-\mu\frac{\partial J(\theta)}{\partial \theta_j} \<br>
+&amp;= \theta_j-\mu\sum^{N}_{i=1}{(h_\theta(x_i)-y_i)x^j_i}
+\end{split} \tag{15}
+\end{equation}
+$$
+其中：
+<br>$$
+\begin{equation}
+\begin{split}
+\ \mu \ \ =&gt; Learning Rate \quad h_\theta(x_i)  \ =&gt; Forecast Value \quad y_i  \ =&gt; True Value \<br>
+\end{split} \tag{16}
+\end{equation}
+$$</p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+         
+        
+        <a href="http://example.org/2018/adaboost/" class="next" rel="next" title="Adaboost">Adaboost&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

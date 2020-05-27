@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2018/logisticregression/" />
+  <link rel="next" href="http://example.org/2018/heatmap/" />
+  <link rel="canonical" href="http://example.org/2018/adaboost/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Adaboost | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Adaboost | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Adaboost",
+    "headline" : "Adaboost",
+    "description" : "Adaboost AdaBoost是英文\x26quot;Adaptive Boosting\x26rdquo;（自适应增强）的缩写，它的自适应在于：前一个基本分类器被错误分类的样本的权值会增大，而正确分类的样本的权值会减小，并再次用来训练下一个基本分类器。同时，在每一轮迭代中，加入一个新的弱分类器，直到达到某个预定的足够小的错误率或达到预先指定的最大迭代次数才确定最终的强分类器。\nAdaboost算法可以简述为三个步骤：\n1、初始化训练数据的权值分布，每一个训练样本最开始时，都被赋予相同的权值。 $$ \\begin{equation} \\begin{split} \\ w_1 \x26amp;= \\frac{1}{N} \\\n\\end{split} \\tag{1} \\end{equation} $$ 2、训练弱分类器，如果某个训练样本点，被当前弱分类器准确地分类，那么在构造下一个训练集中，它对应的权值要减小；相反，如果某个训练样本点被错误分类，那么它的权值就应该增大。权值更新过的样本集被用于训练下一个分类器，整个训练过程如此迭代地进行下去。\n第k个弱分类器在训练集上的加权误差率为： $$ \\begin{equation} \\begin{split} \\ e_k \x26amp;= P(G_k(x_i)\\neq y_i) \\\n\x26amp;= \\sum^{m}_{i=1}{W_aI(G_k(x_i) \\neq y_i)} \\quad s.t \\quad a=ki \\end{split} \\tag{2} \\end{equation} $$\n第k个弱分类器Gk(x)的权重系数为： $$ \\begin{equation} \\begin{split} \\ \\alpha_k \x26amp;= \\frac{1}{2}log\\frac{1-e_k}{e_k} \\\n\\end{split} \\tag{3} \\end{equation} $$\n第k\x2b1个弱分类器的样本集权重系数为： $$ \\begin{equation} \\begin{split} \\ W_b \x26amp;= \\frac{W_a}{Z_k}e^{(-\\alpha_k\\ y_i\\ G_k(x_i))} \\quad s.t \\ \\ b=(k\x2b1)i,\\ a=ki\\\n\\end{split} \\tag{4} \\end{equation} $$ 其中Zk是规范化因子： $$ \\begin{equation} \\begin{split} \\ Z_k \x26amp;= \\sum^{m}_{i=1}{W_ae^{(-\\alpha_k\\ y_i\\ G_k(x_i))}} \\quad s.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2018",
+    "datePublished": "2018-03-17 22:43:07 \x2b0800 CST",
+    "dateModified" : "2018-03-17 22:43:07 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2018\/adaboost\/",
+    "wordCount" : "106",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Adaboost</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2018-03-17 itemprop="datePublished">March 17, 2018</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><em><strong>Adaboost</strong></em>
+<strong>AdaBoost是英文&quot;Adaptive Boosting&rdquo;（自适应增强）的缩写，它的自适应在于：前一个基本分类器被错误分类的样本的权值会增大，而正确分类的样本的权值会减小，并再次用来训练下一个基本分类器。同时，在每一轮迭代中，加入一个新的弱分类器，直到达到某个预定的足够小的错误率或达到预先指定的最大迭代次数才确定最终的强分类器。</strong><br>
+<strong>Adaboost算法可以简述为三个步骤：</strong><br>
+1、初始化训练数据的权值分布，每一个训练样本最开始时，都被赋予相同的权值。
+$$
+\begin{equation}
+\begin{split}
+\ w_1 &amp;= \frac{1}{N} \<br>
+\end{split} \tag{1}
+\end{equation}
+$$
+2、训练弱分类器，如果某个训练样本点，被当前弱分类器准确地分类，那么在构造下一个训练集中，它对应的权值要减小；相反，如果某个训练样本点被错误分类，那么它的权值就应该增大。权值更新过的样本集被用于训练下一个分类器，整个训练过程如此迭代地进行下去。<br>
+第k个弱分类器在训练集上的加权误差率为：
+$$
+\begin{equation}
+\begin{split}
+\ e_k &amp;= P(G_k(x_i)\neq y_i) \<br>
+&amp;= \sum^{m}_{i=1}{W_aI(G_k(x_i) \neq y_i)} \quad s.t \quad a=ki
+\end{split} \tag{2}
+\end{equation}
+$$</p>
+<p>第k个弱分类器Gk(x)的权重系数为：
+$$
+\begin{equation}
+\begin{split}
+\ \alpha_k &amp;= \frac{1}{2}log\frac{1-e_k}{e_k} \<br>
+\end{split} \tag{3}
+\end{equation}
+$$<br>
+第k+1个弱分类器的样本集权重系数为：
+$$
+\begin{equation}
+\begin{split}
+\ W_b &amp;= \frac{W_a}{Z_k}e^{(-\alpha_k\ y_i\ G_k(x_i))} \quad s.t \ \ b=(k+1)i,\ a=ki\<br>
+\end{split} \tag{4}
+\end{equation}
+$$
+其中Zk是规范化因子：
+$$
+\begin{equation}
+\begin{split}
+\ Z_k &amp;= \sum^{m}_{i=1}{W_ae^{(-\alpha_k\ y_i\ G_k(x_i))}} \quad s.t \ \ a=ki \<br>
+\end{split} \tag{5}
+\end{equation}
+$$
+3、将各个训练得到的弱分类器组合成一个强分类器。各个弱分类器的训练过程结束后，加大分类误差率小的弱分类器的权重，使其在最终的分类函数中起着较大的决定作用，而降低分类误差率大的弱分类器的权重，使其在最终的分类函数中起着较小的决定作用。换而言之，误差率低的弱分类器在最终分类器中占的权重较大，否则较小。
+$$
+\begin{equation}
+\begin{split}
+\ G(x) &amp;= sign[f(x)]=sign[\alpha_1G_1(x)+\alpha_2G_2(x)+&hellip;+\alpha_nG_n(x)] \<br>
+\end{split} \tag{6}
+\end{equation}
+$$</p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2018/logisticregression/" class="prev" rel="prev" title="Logistic Regression"><i class="iconfont icon-left"></i>&nbsp;Logistic Regression</a>
+         
+        
+        <a href="http://example.org/2018/heatmap/" class="next" rel="next" title="Heatmap">Heatmap&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

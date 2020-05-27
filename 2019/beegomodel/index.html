@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Shuxy">
+  
+  
+  
+  <link rel="prev" href="http://example.org/2019/sql/" />
+  <link rel="next" href="http://example.org/2019/beegocontrol/" />
+  <link rel="canonical" href="http://example.org/2019/beegomodel/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Golang Model | Shuxy&#39;s Blog
+       
+  </title>
+  <meta name="title" content="Golang Model | Shuxy&#39;s Blog">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/example.org\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Golang Model",
+    "headline" : "Golang Model",
+    "description" : "Web应用中用的一个重要环节就是数据库操作，Controller是可以处理一切的逻辑，但因为逻辑里面存在着可以复用代码，所以抽取出来成为一个新模块，而model层的设计目的就用来完成数据库的交互操作。\n初始化\nfunc init() { \/\/ 注册驱动 orm.RegisterDriver(\x26quot;mysql\x26quot;, orm.DR_MySQL) \/\/ 设置默认数据库 orm.RegisterDataBase(\x26quot;default\x26quot;, \x26quot;mysql\x26quot;, \x26quot;root:root@\/my_db?charset=utf8\x26quot;, 30) \/\/ 注册定义的 model orm.RegisterModel(new(User)) \/\/ 创建 table orm.RunSyncdb(\x26quot;default\x26quot;, false, true) } MySQL配置:\n\/\/ 注册驱动 orm.RegisterDriver(\x26quot;mysql\x26quot;, orm.DR_MySQL) \/\/ 设置默认数据库 \/\/mysql用户：root ，密码：123456 ， 数据库名称：test ， 数据库别名：default orm.RegisterDataBase(\x26quot;default\x26quot;, \x26quot;mysql\x26quot;, \x26quot;root:123456@\/test?charset=utf8\x26quot;) ORM的CRUD\n\/\/ Model Struct type User struct { Id int Name string `orm:\x26quot;size(100)\x26quot;` } func main() { o := orm.NewOrm() user := User{Name: \x26quot;slene\x26quot;} \/\/ 插入表 id, err := o.",
+    "inLanguage" : "zh-CN",
+    "author" : "Shuxy",
+    "creator" : "Shuxy",
+    "publisher": "Shuxy",
+    "accountablePerson" : "Shuxy",
+    "copyrightHolder" : "Shuxy",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-05-14 11:28:16 \x2b0800 CST",
+    "dateModified" : "2019-05-14 11:28:16 \x2b0800 CST",
+    "url" : "http:\/\/example.org\/2019\/beegomodel\/",
+    "wordCount" : "118",
+    "keywords" : [  "Shuxy\x27s Blog"]
+}
+</script>
+
+  <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        
+        
+        
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i = 0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+    MathJax.Hub.Config({
+        
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+</script>
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://example.org/">Shuxy&#39;s Blog</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Golang Model</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://example.org/" rel="author">Shuxy</a>
+                <span class="post-time">
+                on <time datetime=2019-05-14 itemprop="datePublished">May 14, 2019</time>
+                </span>
+
+
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><strong>Web应用中用的一个重要环节就是数据库操作，Controller是可以处理一切的逻辑，但因为逻辑里面存在着可以复用代码，所以抽取出来成为一个新模块，而model层的设计目的就用来完成数据库的交互操作。</strong></p>
+<p>初始化</p>
+<pre><code>func init() {
+    // 注册驱动
+    orm.RegisterDriver(&quot;mysql&quot;, orm.DR_MySQL)
+    // 设置默认数据库
+    orm.RegisterDataBase(&quot;default&quot;, &quot;mysql&quot;, &quot;root:root@/my_db?charset=utf8&quot;, 30)
+    // 注册定义的 model
+    orm.RegisterModel(new(User))
+
+    // 创建 table
+    orm.RunSyncdb(&quot;default&quot;, false, true)
+}
+</code></pre><p>MySQL配置:</p>
+<pre><code>// 注册驱动
+orm.RegisterDriver(&quot;mysql&quot;, orm.DR_MySQL)
+
+// 设置默认数据库
+//mysql用户：root ，密码：123456 ， 数据库名称：test ， 数据库别名：default
+ orm.RegisterDataBase(&quot;default&quot;, &quot;mysql&quot;, &quot;root:123456@/test?charset=utf8&quot;)
+</code></pre><p>ORM的CRUD</p>
+<pre><code>// Model Struct
+type User struct {
+    Id   int
+    Name string `orm:&quot;size(100)&quot;`
+}
+
+func main() {
+    o := orm.NewOrm()
+
+    user := User{Name: &quot;slene&quot;}
+
+    // 插入表
+    id, err := o.Insert(&amp;user)
+    fmt.Printf(&quot;ID: %d, ERR: %v\n&quot;, id, err)
+
+    // 更新表
+    user.Name = &quot;astaxie&quot;
+    num, err := o.Update(&amp;user)
+    fmt.Printf(&quot;NUM: %d, ERR: %v\n&quot;, num, err)
+
+    // 读取
+    u := User{Id: user.Id}
+    err = o.Read(&amp;u)
+    fmt.Printf(&quot;ERR: %v\n&quot;, err)
+
+    // 删除表
+    num, err = o.Delete(&amp;u)
+    fmt.Printf(&quot;NUM: %d, ERR: %v\n&quot;, num, err)
+}
+</code></pre>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://example.org/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://example.org/2019/sql/" class="prev" rel="prev" title="Golang MySQL"><i class="iconfont icon-left"></i>&nbsp;Golang MySQL</a>
+         
+        
+        <a href="http://example.org/2019/beegocontrol/" class="next" rel="next" title="Golang Controller">Golang Controller&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://example.org/">Shuxy</a> </span>
+         
+
+         
+
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
